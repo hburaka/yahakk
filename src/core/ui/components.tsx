@@ -48,11 +48,22 @@ export function Text({
   // Arapça kendi ölçeğini ve yazı tipini kullanır — Latin metinden
   // bağımsız, çünkü harekelerle birlikte aynı puntoda daha küçük okunur.
   const isArabic = variant === 'arabic';
-  const usesReadingFont = isArabic || scalable;
+
+  /*
+    Okunuş her zaman okuma metnidir; arayüz etiketi olarak kullanılmaz.
+    Bu yüzden `scalable` bayrağını beklemeden okuma ölçeğini alıyor.
+
+    Önce opt-in idi ve tesbih ekranında verilmesi unutulmuştu: kullanıcı
+    Okuma Ayarları'nda yazıyı büyütüyor, önizlemede büyüdüğünü görüyor,
+    tesbih ekranına dönünce hiçbir şey değişmemiş oluyordu. Ayarın
+    çalışmadığını sanmak, ayarın gerçekten olmamasından daha kötü.
+  */
+  const isReadingText = scalable || variant === 'transliteration';
+  const usesReadingFont = isArabic || isReadingText;
 
   const factor = isArabic
     ? theme.arabicScaleFactor
-    : scalable
+    : isReadingText
       ? theme.readingScaleFactor
       : 1;
 
@@ -108,9 +119,22 @@ export function Screen({
     return (
       <ScrollView
         style={[styles.flex, { backgroundColor: colors.background }, style]}
+        /*
+          Güvenli alan payı ile nefes payı TEK nesnede toplanıyor.
+
+          Önce iki ayrı stil nesnesi vardı: birincisi `paddingTop:
+          insets.top`, ikincisi `paddingVertical: spacing.lg`. React
+          Native'de dizideki sonraki stil kazandığı için `paddingVertical`
+          `paddingTop`u tamamen siliyordu — durum çubuğu payı hiç
+          uygulanmıyordu. Sonuç: her kaydırmalı ekranda başlık telefonun
+          üst menüsüne yapışık başlıyordu.
+        */
         contentContainerStyle={[
-          padding,
-          { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg },
+          {
+            paddingHorizontal: spacing.xl,
+            paddingTop: (edges.top ? insets.top : 0) + spacing.lg,
+            paddingBottom: (edges.bottom ? insets.bottom : 0) + spacing.lg,
+          },
           contentContainerStyle,
         ]}
         {...rest}>

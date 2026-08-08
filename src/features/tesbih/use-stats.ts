@@ -1,5 +1,5 @@
 import { and, eq, gte, ne, sql } from 'drizzle-orm';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { db } from '@/core/db/client';
 import { zikirSessions } from '@/core/db/schema';
@@ -201,8 +201,26 @@ async function loadStats(): Promise<Omit<TesbihStats, 'isLoading'>> {
   };
 }
 
-export function useTesbihStats(): TesbihStats {
+/**
+ * Tüm zikir geçmişini siler.
+ *
+ * Yarım kalmış aktif oturumlar da dahil siliniyor: "sıfırla" dendiğinde
+ * kullanıcı gerçekten sıfır bekler, bir kısmı duran bir sayaç değil.
+ * Sayaç tarafı silinmiş satırı fark edip yeni kayıt açıyor
+ * (bkz. use-counter.ts `persist`).
+ *
+ * Geri alınamaz; çağıran ekran onay almadan çağırmamalı.
+ */
+export async function clearTesbihHistory(): Promise<void> {
+  await db.delete(zikirSessions);
+}
+
+export function useTesbihStats(): TesbihStats & { reload: () => void } {
   const [stats, setStats] = useState<TesbihStats>(EMPTY);
+  // Sıfırlama sonrası raporun yeniden okunması için sayaç
+  const [nonce, setNonce] = useState(0);
+
+  const reload = useCallback(() => setNonce((value) => value + 1), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -221,7 +239,7 @@ export function useTesbihStats(): TesbihStats {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [nonce]);
 
-  return stats;
+  return { ...stats, reload };
 }

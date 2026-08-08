@@ -170,41 +170,59 @@ export function useCounter(
         const now = Math.floor(Date.now() / 1000);
         const isComplete = nextCount >= nextTarget;
 
-        if (!sessionId.current) {
-          const id = `${key}-${Date.now()}`;
-          sessionId.current = id;
-          await db.insert(zikirSessions).values({
-            id,
-            templateId,
-            // Tekil zikirlerde boş dize kullanılıyor: NULL karşılaştırması
-            // SQL'de her zaman NULL döndüğü için sorgu filtresi tutmuyor.
-            setId,
-            setStepIndex: stepIndex,
-            targetCount: nextTarget,
-            currentCount: nextCount,
-            status: isComplete ? 'completed' : 'active',
-            date: todayIso(),
-            startedAt: now,
-            updatedAt: now,
-            completedAt: isComplete ? now : null,
-          });
-          if (isComplete) sessionId.current = null;
-          return;
+        // Ref doğrudan kullanılırsa TypeScript async kapanışın içinde
+        // daraltma yapamıyor; yerel değişkene alınıyor.
+        const activeId = sessionId.current;
+
+        if (activeId) {
+          const result = await db
+            .update(zikirSessions)
+            .set({
+              currentCount: nextCount,
+              targetCount: nextTarget,
+              status: isComplete ? 'completed' : 'active',
+              updatedAt: now,
+              completedAt: isComplete ? now : null,
+            })
+            .where(eq(zikirSessions.id, activeId));
+
+          const changed = (result as { changes?: number } | undefined)?.changes;
+
+          if (changed !== 0) {
+            // Hedefe ulaşan oturum kapandı; bir sonraki sayım yeni bir
+            // oturum açsın diye kimlik bırakılıyor.
+            if (isComplete) sessionId.current = null;
+            return;
+          }
+
+          /*
+            Hiçbir satır etkilenmediyse oturum kaydı silinmiş demektir —
+            kullanıcı rapor ekranından istatistikleri sıfırlamış olabilir.
+            Kimlik temizlenip aşağıda yeni bir kayıt açılıyor. Bu kontrol
+            olmadan sayaç ekranda artmaya devam ediyor ama hiçbir şey
+            kaydedilmiyordu; kullanıcı çektiği zikrin kaybolduğunu ancak
+            uygulamayı kapatıp açınca fark ederdi.
+          */
+          sessionId.current = null;
         }
 
-        await db
-          .update(zikirSessions)
-          .set({
-            currentCount: nextCount,
-            targetCount: nextTarget,
-            status: isComplete ? 'completed' : 'active',
-            updatedAt: now,
-            completedAt: isComplete ? now : null,
-          })
-          .where(eq(zikirSessions.id, sessionId.current));
-
-        // Hedefe ulaşan oturum kapandı; bir sonraki sayım yeni bir
-        // oturum açsın diye kimlik bırakılıyor.
+        const id = `${key}-${Date.now()}`;
+        sessionId.current = id;
+        await db.insert(zikirSessions).values({
+          id,
+          templateId,
+          // Tekil zikirlerde boş dize kullanılıyor: NULL karşılaştırması
+          // SQL'de her zaman NULL döndüğü için sorgu filtresi tutmuyor.
+          setId,
+          setStepIndex: stepIndex,
+          targetCount: nextTarget,
+          currentCount: nextCount,
+          status: isComplete ? 'completed' : 'active',
+          date: todayIso(),
+          startedAt: now,
+          updatedAt: now,
+          completedAt: isComplete ? now : null,
+        });
         if (isComplete) sessionId.current = null;
       });
     },

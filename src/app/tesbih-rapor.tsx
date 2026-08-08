@@ -1,10 +1,13 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import {
+  clearTesbihHistory,
   useTesbihStats,
   type DailyPoint,
   type ZikirBreakdownRow,
@@ -182,6 +185,37 @@ function EmptyReport() {
 export default function TesbihRaporScreen() {
   const { colors, spacing } = useTheme();
   const stats = useTesbihStats();
+  const [clearing, setClearing] = useState(false);
+
+  const { allTime, reload } = stats;
+
+  const confirmClear = useCallback(() => {
+    Alert.alert(
+      'İstatistikler sıfırlansın mı?',
+      `${tr(allTime)} zikirlik geçmişiniz, günlük dağılım ve seriler silinecek. Bu işlem geri alınamaz.`,
+      [
+        { text: 'Vazgeç', style: 'cancel' },
+        {
+          text: 'Sıfırla',
+          style: 'destructive',
+          onPress: async () => {
+            setClearing(true);
+            try {
+              await clearTesbihHistory();
+              reload();
+            } catch {
+              Alert.alert(
+                'Sıfırlanamadı',
+                'Kayıtlar silinirken bir sorun oldu. Tekrar deneyin.'
+              );
+            } finally {
+              setClearing(false);
+            }
+          },
+        },
+      ]
+    );
+  }, [allTime, reload]);
 
   if (stats.isLoading) {
     return (
@@ -273,6 +307,23 @@ export default function TesbihRaporScreen() {
         <Text variant="caption" color="textMuted">
           Kayıtlar yalnızca bu telefonda tutulur.
         </Text>
+
+        {/*
+          Sıfırlama en altta ve ikincil seviyede duruyor: rapor okumaya
+          gelen kullanıcının yolunun üstünde olmamalı. Geri alınamaz bir
+          işlem olduğu için onay isteniyor ve onay metninde kaç zikrin
+          silineceği yazıyor — "emin misiniz?" tek başına kullanıcıya
+          neyi kaybedeceğini söylemiyor.
+        */}
+        <View style={{ marginTop: spacing.lg }}>
+          <Button
+            variant="secondary"
+            icon="delete-outline"
+            label="İstatistikleri sıfırla"
+            busy={clearing}
+            onPress={confirmClear}
+          />
+        </View>
       </View>
     </Screen>
   );

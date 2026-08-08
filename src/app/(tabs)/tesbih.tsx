@@ -135,16 +135,26 @@ function QuickSwitcher({
   const { colors, spacing, radii } = useTheme();
   const period = usePeriodPalette();
 
-  // Kullanıcının favorileri varsa şerit onlardan oluşur; yoksa
-  // varsayılan liste gösterilir. Boş şerit göstermek, özelliği hiç
-  // keşfedilmez hale getiriyor.
-  const source =
-    favoriteIds.length > 0
-      ? favoriteIds
-      : [
-          ...ZIKIR_SETS.map((set) => `s:${set.id}`),
-          ...QUICK_TEMPLATE_IDS.map((id) => `t:${id}`),
-        ];
+  /*
+    Şerit: önce favoriler, sonra varsayılanlar — hiçbir şey kaybolmadan.
+
+    Önce "favori varsa yalnızca favoriler" mantığı vardı. Tek bir zikri
+    yıldızlamak, şeritteki her şeyi (namaz tesbihatı dahil) siliyordu;
+    kullanıcı bir şey kazandığını sanırken erişimini kaybediyordu.
+
+    Sıralama kullanım sıklığına göre değil. Sıklık, günde beş kez aynı
+    yere bakan biri için şeridin sırasını sürekli değiştirir ve kas
+    hafızasını bozar. Kullanıcı neyin nerede duracağına yıldızla kendisi
+    karar veriyor.
+  */
+  const source = useMemo(() => {
+    const defaults = [
+      ...ZIKIR_SETS.map((set) => `s:${set.id}`),
+      ...QUICK_TEMPLATE_IDS.map((id) => `t:${id}`),
+    ];
+    const seen = new Set(favoriteIds);
+    return [...favoriteIds, ...defaults.filter((id) => !seen.has(id))];
+  }, [favoriteIds]);
 
   const items = source
     .map((id) => {
@@ -153,7 +163,7 @@ function QuickSwitcher({
         if (!set) return null;
         return {
           key: id,
-          label: set.name,
+          label: set.shortName,
           isSet: true,
           isSelected: selection.set?.id === set.id,
           onPress: () => selection.selectSet(set.id),
@@ -164,7 +174,7 @@ function QuickSwitcher({
       if (!template) return null;
       return {
         key: id,
-        label: template.name,
+        label: template.shortName,
         isSet: false,
         isSelected:
           selection.kind === 'template' &&
@@ -371,39 +381,30 @@ export default function TesbihScreen() {
           paddingVertical: spacing.sm,
           gap: spacing.md,
         }}>
-        <View style={{ flex: 1 }}>
-          {/* Tek satırda "Sübhânallâhi v..." gibi kesiliyordu. Zikrin adı
-              başlığın kendisi; kısaltılacak yer burası değil. */}
-          <Text variant="bodyStrong" numberOfLines={2}>
-            {isSet && selected.set ? selected.set.name : template.name}
-          </Text>
-          <Text variant="caption" color="textSecondary">
-            {isSet
-              ? `${selected.stepIndex + 1}/${selected.totalSteps} · ${template.name} · ${selected.target}`
-              : `Hedef ${selected.target}`}
-          </Text>
-        </View>
-        {/* Salt ikon düğmesi de zemin taşıyor; yalnızca opaklık değişen
-            hali ekranda dekoratif bir simge gibi duruyordu. */}
-        <Pressable
-          onPress={() => router.push('/tesbih-rapor')}
-          accessibilityRole="button"
-          accessibilityLabel="Tesbihat raporu"
-          style={({ pressed }) => ({
-            width: MIN_TOUCH_TARGET,
-            height: MIN_TOUCH_TARGET,
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: MIN_TOUCH_TARGET / 2,
-            backgroundColor: pressed ? colors.border : colors.surfaceAlt,
-          })}>
-          <MaterialCommunityIcons
-            name="chart-timeline-variant"
-            size={22}
-            color={colors.textSecondary}
-          />
-        </Pressable>
+        {/*
+          Başlıkta yalnızca ekranın ortasında BULUNMAYAN bilgi durur.
 
+          Önce burada zikrin adı ve hedefi yazıyordu; ikisi de altta
+          zaten vardı. Üstelik şablonların çoğunda `name` ile
+          `transliteration` birebir aynı metin, yani aynı satır ekranda
+          iki kez görünüyordu. Tek zikirde başlık tamamen kalktı.
+
+          Set seçiliyse durum farklı: setin adı ve kaçıncı adımda
+          olunduğu aşağıda hiçbir yerde yok. Onlar kalıyor, gerisi
+          değil.
+        */}
+        {isSet && selected.set ? (
+          <View style={{ flex: 1 }}>
+            <Text variant="bodyStrong" numberOfLines={2}>
+              {selected.set.name}
+            </Text>
+            <Text variant="caption" color="textSecondary">
+              {`${selected.stepIndex + 1}. adım / ${selected.totalSteps}`}
+            </Text>
+          </View>
+        ) : (
+          <View style={{ flex: 1 }} />
+        )}
         {/* Önce çerçevesiz, şeffaf ve soluk renkli düz metindi; ekrandaki
             zikir adından ve açıklamalardan ayırt edilemiyordu. Artık
             uygulamanın ortak buton dilini kullanıyor. */}
@@ -594,6 +595,33 @@ export default function TesbihScreen() {
           onPress={counter.undo}
           disabled={counter.count === 0}
         />
+
+        {/*
+          Rapor düğmesi ortada. Önce başlıkta duruyordu; oraya sayarken
+          bakılmıyor ve salt ikon olarak dekoratif bir simge gibi
+          görünüyordu. Burada iki yardımcı eylemin arasında, aynı sessiz
+          seviyede duruyor. Sayaç alanının dışında kaldığı için sayarken
+          yanlışlıkla basılmıyor.
+        */}
+        <Pressable
+          onPress={() => router.push('/tesbih-rapor')}
+          accessibilityRole="button"
+          accessibilityLabel="Tesbihat raporu ve istatistikler"
+          style={({ pressed }) => ({
+            width: MIN_TOUCH_TARGET,
+            height: MIN_TOUCH_TARGET,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: MIN_TOUCH_TARGET / 2,
+            backgroundColor: pressed ? colors.border : colors.surfaceAlt,
+          })}>
+          <MaterialCommunityIcons
+            name="chart-timeline-variant"
+            size={22}
+            color={colors.textSecondary}
+          />
+        </Pressable>
+
         <Button
           variant="quiet"
           icon="refresh"

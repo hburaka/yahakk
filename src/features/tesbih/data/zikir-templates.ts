@@ -21,6 +21,12 @@ export type ZikirTemplate = {
   id: string;
   /** Türkçe ad — liste ve sayaç başlığında görünür */
   name: string;
+  /**
+   * Dar yerlerde kullanılan kısa ad (hızlı geçiş şeridi).
+   * Tam ad şeride sığmıyor: "Sübhânallâhi ve bihamdihî" tek başına
+   * ekranın yarısını kaplayıp şeridi kullanılamaz hale getiriyordu.
+   */
+  shortName: string;
   /** Arapça metin (RTL, Arapça font ile render edilir) */
   arabic: string;
   /** Latin harfli okunuş */
@@ -46,6 +52,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'tehlil',
     name: 'Kelime-i Tevhid',
+    shortName: 'Tevhid',
     arabic: 'لَا إِلٰهَ إِلَّا اللّٰهُ',
     transliteration: 'Lâ ilâhe illallâh',
     meaning: 'Allah’tan başka ilah yoktur.',
@@ -56,6 +63,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'tehlil-tam',
     name: 'Kelime-i Tevhid (tam metin)',
+    shortName: 'Tevhid (tam)',
     arabic:
       'لَا إِلٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلٰى كُلِّ شَيْءٍ قَدِيرٌ',
     transliteration:
@@ -72,6 +80,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'temcid',
     name: 'Kelime-i Temcîd',
+    shortName: 'Temcîd',
     arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَلِيِّ الْعَظِيمِ',
     transliteration: 'Lâ havle velâ kuvvete illâ billâhi’l-aliyyi’l-azîm',
     meaning:
@@ -85,6 +94,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'subhanallah',
     name: 'Sübhânallâh',
+    shortName: 'Sübhânallâh',
     arabic: 'سُبْحَانَ اللّٰهِ',
     transliteration: 'Sübhânallâh',
     meaning: 'Allah’ı her türlü noksanlıktan tenzih ederim.',
@@ -95,6 +105,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'elhamdulillah',
     name: 'Elhamdülillâh',
+    shortName: 'Elhamdülillâh',
     arabic: 'اَلْحَمْدُ لِلّٰهِ',
     transliteration: 'Elhamdülillâh',
     meaning: 'Hamd Allah’a mahsustur.',
@@ -105,6 +116,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'allahuekber',
     name: 'Allâhu ekber',
+    shortName: 'Allâhu ekber',
     arabic: 'اَللّٰهُ أَكْبَرُ',
     transliteration: 'Allâhu ekber',
     meaning: 'Allah en büyüktür.',
@@ -117,6 +129,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'subhanallahi-ve-bihamdihi',
     name: 'Sübhânallâhi ve bihamdihî',
+    shortName: 'Tesbîh + Hamd',
     arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ',
     transliteration: 'Sübhânallâhi ve bihamdihî',
     meaning: 'Allah’ı hamd ile tesbih ederim.',
@@ -130,6 +143,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'subhanallahil-azim',
     name: 'Sübhânallâhi’l-azîm ve bihamdihî',
+    shortName: 'Tesbîh-i azîm',
     arabic: 'سُبْحَانَ اللّٰهِ الْعَظِيمِ وَبِحَمْدِهِ',
     transliteration: 'Sübhânallâhi’l-azîm ve bihamdihî',
     meaning: 'Yüce Allah’ı hamd ile tesbih ederim.',
@@ -140,6 +154,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'hasbunallah',
     name: 'Hasbünallâhu ve ni’me’l-vekîl',
+    shortName: 'Hasbünallâh',
     arabic: 'حَسْبُنَا اللّٰهُ وَنِعْمَ الْوَكِيلُ',
     transliteration: 'Hasbünallâhu ve ni’me’l-vekîl',
     meaning: 'Allah bize yeter, O ne güzel vekildir.',
@@ -152,6 +167,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'salavat-kisa',
     name: 'Salavât-ı Şerîfe',
+    shortName: 'Salavât',
     arabic: 'اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ وَعَلٰى آلِهِ وَصَحْبِهِ وَسَلِّمْ',
     transliteration:
       'Allâhümme salli alâ seyyidinâ Muhammedin ve alâ âlihî ve sahbihî ve sellim',
@@ -166,6 +182,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'estagfirullah',
     name: 'Estağfirullâh',
+    shortName: 'İstiğfâr',
     arabic: 'أَسْتَغْفِرُ اللّٰهَ',
     transliteration: 'Estağfirullâh',
     meaning: 'Allah’tan bağışlanma dilerim.',
@@ -179,6 +196,7 @@ export const ZIKIR_TEMPLATES: readonly ZikirTemplate[] = [
   {
     id: 'estagfirullah-azim',
     name: 'Estağfirullâhe’l-azîm',
+    shortName: 'İstiğfâr-ı azîm',
     arabic: 'أَسْتَغْفِرُ اللّٰهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ',
     transliteration: 'Estağfirullâhe’l-azîme ve etûbü ileyh',
     meaning: 'Yüce Allah’tan bağışlanma diler ve O’na tevbe ederim.',
@@ -200,6 +218,8 @@ export type ZikirSetStep = {
 export type ZikirSet = {
   id: string;
   name: string;
+  /** Hızlı geçiş şeridinde kullanılan kısa ad */
+  shortName: string;
   description: string;
   steps: readonly ZikirSetStep[];
   source?: string;
@@ -209,6 +229,7 @@ export const ZIKIR_SETS: readonly ZikirSet[] = [
   {
     id: 'namaz-tesbihati',
     name: 'Namaz Tesbihatı',
+    shortName: 'Namaz',
     description: 'Farz namazlardan sonra okunan tesbihat.',
     steps: [
       { templateId: 'subhanallah', count: 33 },
@@ -221,6 +242,7 @@ export const ZIKIR_SETS: readonly ZikirSet[] = [
   {
     id: 'uyku-oncesi',
     name: 'Uyku Öncesi Tesbihat',
+    shortName: 'Uyku öncesi',
     description: 'Yatmadan önce okunan tesbihat.',
     steps: [
       { templateId: 'subhanallah', count: 33 },
