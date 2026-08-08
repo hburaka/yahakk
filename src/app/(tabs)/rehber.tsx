@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
 
 import { storage, StorageKeys } from '@/core/store/storage';
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
@@ -189,29 +190,16 @@ export default function RehberScreen() {
         <Text variant="title">Rehber</Text>
 
         {/* Okuma ayarları okuma yerinden erişilebilir olmalı — kullanıcı
-            metni okurken büyütmek ister, Ayarlar'a gidip dönmek istemez. */}
-        <Link href="/okuma-ayarlari" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Okuma ayarları: yazı boyutu ve yazı tipi"
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.xs,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingHorizontal: spacing.md,
-              opacity: pressed ? 0.6 : 1,
-            })}>
-            <MaterialCommunityIcons
-              name="format-size"
-              size={22}
-              color={colors.textSecondary}
-            />
-            <Text variant="bodyStrong" color="textSecondary">
-              Aa
-            </Text>
-          </Pressable>
-        </Link>
+            metni okurken büyütmek ister, Ayarlar'a gidip dönmek istemez.
+            Önce yalnızca opaklık değişen çerçevesiz bir metindi; başlığın
+            yanında düz yazı gibi duruyordu. */}
+        <Button
+          variant="quiet"
+          icon="format-size"
+          label="Aa"
+          onPress={() => router.push('/okuma-ayarlari')}
+          accessibilityLabel="Okuma ayarları: yazı boyutu ve yazı tipi"
+        />
       </View>
 
       <View style={{ marginTop: spacing.lg }}>

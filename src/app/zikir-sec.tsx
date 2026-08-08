@@ -62,7 +62,7 @@ function ZikirRow({
           ? period.accentSoft
           : pressed
             ? colors.surfaceAlt
-            : 'transparent',
+            : colors.surface,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: isSelected ? period.accent : colors.border,
       })}>
@@ -208,7 +208,7 @@ function SetRow({
           ? period.accentSoft
           : pressed
             ? colors.surfaceAlt
-            : 'transparent',
+            : colors.surface,
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: isSelected ? period.accent : colors.border,
       })}>

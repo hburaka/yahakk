@@ -67,6 +67,48 @@ Tek aile: sistem yazı tipi (`system-ui` / SF Pro / Roboto). Ürün arayüzünde
 
 Her etkileşimli bileşende: default, pressed, focused, disabled durumları tanımlı.
 
+### Buton ve seçim dili (tek kaynak)
+
+Bu bölüm yazılmadan önce projede **on ayrı buton muamelesi** vardı; kimi
+çerçeveli kimi değil, kimi zeminli kimi şeffaf. En kötüsü tesbih
+ekranının üst düğmeleriydi: çerçevesiz, şeffaf ve soluk renkli oldukları
+için ekrandaki açıklama yazılarından ayırt edilemiyorlardı.
+
+**Kural: dokunulabilir olan her şeyin zemini vardır.** Şeffaf bir
+dokunma hedefi yoktur. "Kart kullanılmaz" kuralı *içerik düzeni* içindir
+(tarife, listeler, okuma metni); kontroller bunun dışındadır, çünkü bir
+kontrolün sınırı onun ne olduğunu söyler.
+
+| Bileşen | Nerede | Görünüm |
+|---|---|---|
+| `Button` / `primary` | Ekranın asıl eylemi | Mürekkep dolgu, ters renk yazı |
+| `Button` / `secondary` | Varsayılan buton | Saç teli çerçeve + yüzey |
+| `Button` / `quiet` | Yoğun bağlamda yardımcı eylem | Çerçevesiz, `surfaceAlt` zemin |
+| `OptionGroup` | Dikey radyo listesi (açıklamalı seçenekler) | Çerçeve + yüzey; seçili olan vakit rengi |
+| `ChoiceChips` | Kısa seçenekler (boyut, renk) | Hap; seçili olan vakit rengi |
+| `OptionCard` | Alt ekrana götüren veya eylem yapan satır | Çerçeve + yüzey |
+
+Buton etiketi `button` tipografi tokenını kullanır. `bodyStrong`
+kullanılmaz: o token okuma metni için geniş satır aralığı taşır ve
+butonları şişirir.
+
+**Birincil buton vakit rengiyle dolu değildir.** Yukarıdaki renk kuralı
+metin renklerinin nötr eksenden gelmesini şart koşuyor; vakit rengini
+zemin yapıp üstüne yazı koymak kontrast oranını gün içinde değiştirir ve
+AAA hedefi çöker. Vakit rengi seçili durumu göstermeye ayrılmıştır.
+
+### Sabit yükseklik yasağı
+
+Layout bölümündeki "hiçbir metin sabit yükseklikli kaba konmaz" kuralı
+üç yerde çiğnenmişti ve gerçek bir hataya yol açtı: zikir çipi
+`height: 40` olduğu için "Sübhânallâhi ve bihamdihî" ekranda
+"Sübhânallâhi ve" olarak görünüyordu. Üç nokta da çıkmadığı için
+kullanıcı metnin eksik olduğunu anlayamıyordu.
+
+Dokunma hedeflerinde `height` değil `minHeight` kullanılır. Tek satırda
+kalması gereken yerlerde (buton etiketi) `numberOfLines={1}` verilir ki
+sığmayan metin üç noktayla kısalsın, **sessizce kaybolmasın**.
+
 - **Vakit satırı**: sol vakit adı, sağ saat. Geçmiş vakitler soluk; sıradaki vakit kalın + vakit rengi işaretçi. Renk tek başına bilgi taşımaz — sıradaki satır ayrıca ağırlık ve ekran okuyucu etiketiyle de belirtilir.
 - **Geri sayım**: tabular, tek renk, degrade yok. SaaS "hero metric" kalıbından kaçınmak için sola dayalı ve vakit adıyla ortak temel çizgide.
 - **Boş/hata durumları**: arayüzü öğreten metin, "veri yok" değil.

@@ -99,7 +99,16 @@ export function Button({
       {icon ? (
         <MaterialCommunityIcons name={icon} size={20} color={iconColor} />
       ) : null}
-      <Text variant="button" style={{ color: contentColor }}>
+      {/*
+        `flexShrink` ve tek satır sınırı bilinçli. Uzun etiketler (şehir
+        adları gibi) sarmalayınca ikon, metin ve ok alt alta düşüp buton
+        üç satıra yayılıyordu. Buton tek satırlık bir kontroldür;
+        sığmayan etiket üç noktayla kısalır, sessizce kaybolmaz.
+      */}
+      <Text
+        variant="button"
+        numberOfLines={1}
+        style={{ color: contentColor, flexShrink: 1 }}>
         {label}
       </Text>
       {busy ? (

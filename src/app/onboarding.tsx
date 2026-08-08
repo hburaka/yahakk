@@ -2,79 +2,15 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import * as Location from 'expo-location';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { storage, StorageKeys } from '@/core/store/storage';
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
-import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { ensureNotificationSetup } from '@/features/notifications/scheduler';
-import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 
 type Step = 'welcome' | 'location' | 'notifications';
-
-function PrimaryButton({
-  label,
-  onPress,
-  busy,
-}: {
-  label: string;
-  onPress: () => void;
-  busy?: boolean;
-}) {
-  const { spacing, radii } = useTheme();
-  const period = usePeriodPalette();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={busy}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      style={({ pressed }) => ({
-        minHeight: MIN_TOUCH_TARGET + 4,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: spacing.xl,
-        borderRadius: radii.pill,
-        backgroundColor: period.accent,
-        opacity: pressed || busy ? 0.7 : 1,
-      })}>
-      <Text variant="bodyStrong" style={{ color: period.onAccent }}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
-function SecondaryButton({
-  label,
-  onPress,
-}: {
-  label: string;
-  onPress: () => void;
-}) {
-  const { colors, spacing, radii } = useTheme();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      style={({ pressed }) => ({
-        minHeight: MIN_TOUCH_TARGET,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: spacing.xl,
-        borderRadius: radii.pill,
-        backgroundColor: pressed ? colors.surfaceAlt : 'transparent',
-      })}>
-      <Text variant="bodyStrong" color="textSecondary">
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 function Point({
   icon,
@@ -178,7 +114,7 @@ export default function OnboardingScreen() {
           </View>
 
           <View style={{ gap: spacing.sm, marginTop: spacing.xl }}>
-            <PrimaryButton label="Başlayalım" onPress={() => setStep('location')} />
+            <Button fullWidth variant="primary" label="Başlayalım" onPress={() => setStep('location')} />
           </View>
         </View>
       ) : null}
@@ -201,12 +137,16 @@ export default function OnboardingScreen() {
           </Text>
 
           <View style={{ gap: spacing.sm, marginTop: spacing.xl }}>
-            <PrimaryButton
+            <Button
+              fullWidth
+              variant="primary"
               label="Konuma izin ver"
               onPress={askLocation}
               busy={busy}
             />
-            <SecondaryButton
+            <Button
+              fullWidth
+              variant="quiet"
               label="Şehrimi elle seçeceğim"
               onPress={() => setStep('notifications')}
             />
@@ -231,12 +171,14 @@ export default function OnboardingScreen() {
           </Text>
 
           <View style={{ gap: spacing.sm, marginTop: spacing.xl }}>
-            <PrimaryButton
+            <Button
+              fullWidth
+              variant="primary"
               label="Bildirimlere izin ver"
               onPress={askNotifications}
               busy={busy}
             />
-            <SecondaryButton label="Şimdilik istemiyorum" onPress={finish} />
+            <Button fullWidth variant="quiet" label="Şimdilik istemiyorum" onPress={finish} />
           </View>
         </View>
       ) : null}

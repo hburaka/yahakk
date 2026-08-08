@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useKeepAwake } from 'expo-keep-awake';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -218,7 +218,7 @@ function QuickSwitcher({
             borderRadius: radii.pill,
             backgroundColor: item.isSelected
               ? period.accentSoft
-              : 'transparent',
+              : colors.surface,
             borderWidth: StyleSheet.hairlineWidth,
             borderColor: item.isSelected ? period.accent : colors.border,
           }}>
@@ -277,7 +277,7 @@ function TargetChips({
               justifyContent: 'center',
               paddingHorizontal: spacing.lg,
               borderRadius: radii.pill,
-              backgroundColor: isSelected ? period.accentSoft : 'transparent',
+              backgroundColor: isSelected ? period.accentSoft : colors.surface,
               borderWidth: StyleSheet.hairlineWidth,
               borderColor: isSelected ? period.accent : colors.border,
             }}>
@@ -383,24 +383,26 @@ export default function TesbihScreen() {
               : `Hedef ${selected.target}`}
           </Text>
         </View>
-        <Link href="/tesbih-rapor" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Tesbihat raporu"
-            style={({ pressed }) => ({
-              width: MIN_TOUCH_TARGET,
-              height: MIN_TOUCH_TARGET,
-              alignItems: 'center',
-              justifyContent: 'center',
-              opacity: pressed ? 0.6 : 1,
-            })}>
-            <MaterialCommunityIcons
-              name="chart-timeline-variant"
-              size={22}
-              color={colors.textSecondary}
-            />
-          </Pressable>
-        </Link>
+        {/* Salt ikon düğmesi de zemin taşıyor; yalnızca opaklık değişen
+            hali ekranda dekoratif bir simge gibi duruyordu. */}
+        <Pressable
+          onPress={() => router.push('/tesbih-rapor')}
+          accessibilityRole="button"
+          accessibilityLabel="Tesbihat raporu"
+          style={({ pressed }) => ({
+            width: MIN_TOUCH_TARGET,
+            height: MIN_TOUCH_TARGET,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: MIN_TOUCH_TARGET / 2,
+            backgroundColor: pressed ? colors.border : colors.surfaceAlt,
+          })}>
+          <MaterialCommunityIcons
+            name="chart-timeline-variant"
+            size={22}
+            color={colors.textSecondary}
+          />
+        </Pressable>
 
         {/* Önce çerçevesiz, şeffaf ve soluk renkli düz metindi; ekrandaki
             zikir adından ve açıklamalardan ayırt edilemiyordu. Artık

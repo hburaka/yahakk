@@ -1,11 +1,11 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useLocalSearchParams } from 'expo-router';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
 
 import { storage, StorageKeys } from '@/core/store/storage';
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
-import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { getIlmihalTopic } from '@/features/ilmihal/content';
 import {
@@ -235,7 +235,11 @@ export default function IlmihalDetayScreen() {
           en iyi okuyanlar bulur — onlara kolay bir yol açmak, tek
           başına yapılan her kontrolden daha etkili.
         */}
-        <Pressable
+        <Button
+          variant="secondary"
+          icon="flag-outline"
+          label="Bu bilgide hata var"
+          accessibilityLabel="Bu bilgide hata bildir"
           onPress={() =>
             Linking.openURL(
               `mailto:hburaka@gmail.com?subject=${encodeURIComponent(
@@ -245,29 +249,7 @@ export default function IlmihalDetayScreen() {
               )}`
             )
           }
-          accessibilityRole="button"
-          accessibilityLabel="Bu bilgide hata bildir"
-          style={({ pressed }) => ({
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: spacing.sm,
-            alignSelf: 'flex-start',
-            minHeight: MIN_TOUCH_TARGET,
-            paddingHorizontal: spacing.md,
-            borderRadius: radii.pill,
-            borderWidth: StyleSheet.hairlineWidth,
-            borderColor: colors.border,
-            backgroundColor: pressed ? colors.surfaceAlt : 'transparent',
-          })}>
-          <MaterialCommunityIcons
-            name="flag-outline"
-            size={18}
-            color={colors.textSecondary}
-          />
-          <Text variant="bodyStrong" color="textSecondary">
-            Bu bilgide hata var
-          </Text>
-        </Pressable>
+        />
       </View>
     </Screen>
   );

@@ -65,7 +65,7 @@ function Row({
           ? period.accentSoft
           : pressed
             ? colors.surfaceAlt
-            : 'transparent',
+            : colors.surface,
       })}>
       <MaterialCommunityIcons
         name={icon}

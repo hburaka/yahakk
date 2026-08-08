@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Link } from 'expo-router';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import type { Location as LocationRow } from '@/core/db/schema';
 
@@ -10,6 +10,7 @@ import {
   spellCountdown,
   spellMinutes,
 } from '@/features/prayer-times/period';
+import { Button } from '@/core/ui/button';
 import { DailyContent } from '@/features/daily/daily-content';
 import { marginFor } from '@/features/prayer-times/margins';
 import {
@@ -132,39 +133,27 @@ function TimetableRow({
 }
 
 function LocationHeader({ location }: { location: LocationRow }) {
-  const { colors, spacing } = useTheme();
+  const router = useRouter();
   const label = location.region
     ? `${location.name}, ${location.region}`
     : location.name;
 
   return (
-    <Link href="/konum-sec" asChild>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Konum: ${label}. Değiştirmek için dokunun.`}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'flex-start',
-          gap: spacing.xs,
-          minHeight: MIN_TOUCH_TARGET,
-          opacity: pressed ? 0.6 : 1,
-        })}>
-      <MaterialCommunityIcons
-        name="map-marker-outline"
-        size={18}
-        color={colors.textSecondary}
-      />
-      <Text variant="body" color="textSecondary">
-        {label}
-      </Text>
-        <MaterialCommunityIcons
-          name="chevron-down"
-          size={18}
-          color={colors.textMuted}
-        />
-      </Pressable>
-    </Link>
+    /*
+      Önce yalnızca opaklık değişen çerçevesiz bir satırdı; şehir adı
+      düz yazı gibi duruyor, dokunulabilir olduğu anlaşılmıyordu. Uzun
+      şehir adlarında da ikon, metin ve ok alt alta düşüp başlık üç
+      satıra yayılıyordu. Ortak sessiz buton hem zemini hem tek satırda
+      kalmayı getiriyor.
+    */
+    <Button
+      variant="quiet"
+      icon="map-marker-outline"
+      trailingIcon="chevron-down"
+      label={label}
+      onPress={() => router.push('/konum-sec')}
+      accessibilityLabel={`Konum: ${label}. Değiştirmek için dokunun.`}
+    />
   );
 }
 
@@ -173,7 +162,8 @@ function LocationHeader({ location }: { location: LocationRow }) {
  * değil — kullanıcı reddettiyse elle seçim yolu açık kalmalı.
  */
 function NeedsLocation({ reason }: { reason: 'denied' | 'unavailable' }) {
-  const { colors, spacing, radii } = useTheme();
+  const { colors, spacing } = useTheme();
+  const router = useRouter();
 
   return (
     <Screen scroll>
@@ -193,24 +183,13 @@ function NeedsLocation({ reason }: { reason: 'denied' | 'unavailable' }) {
           Konum bilginiz cihazınızda kalır, hiçbir sunucuya gönderilmez.
         </Text>
 
-        <Link href="/konum-sec" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Şehir seç"
-            style={({ pressed }) => ({
-              marginTop: spacing.md,
-              alignSelf: 'flex-start',
-              minHeight: MIN_TOUCH_TARGET,
-              justifyContent: 'center',
-              paddingHorizontal: spacing.xl,
-              borderRadius: radii.pill,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: colors.borderStrong,
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-            })}>
-            <Text variant="bodyStrong">Şehir seç</Text>
-          </Pressable>
-        </Link>
+        <View style={{ marginTop: spacing.md }}>
+          <Button
+            variant="primary"
+            label="Şehir seç"
+            onPress={() => router.push('/konum-sec')}
+          />
+        </View>
       </View>
     </Screen>
   );
