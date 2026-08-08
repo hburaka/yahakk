@@ -10,17 +10,22 @@
  * Yaklaşım **izin listesi**: bir rota burada açıkça sayılmıyorsa reklam
  * gösterilmez. Yeni bir ekran eklendiğinde varsayılan "reklamsız"
  * oluyor; unutulan bir ekran yüzünden ibadet bölünmüyor.
+ *
+ * ⚠️ Rota biçimi: `usePathname()` **grup segmentlerini döndürmüyor**.
+ * Vakitler sekmesi `/(tabs)/index` değil, sadece `/`. Bu kural ilk
+ * yazımda kaçırıldığı için hiçbir rota eşleşmedi ve reklam her yerde
+ * kapandı — yasak ekranlar tesadüfen temiz kaldı, kural işlediği için
+ * değil. `normalizeRoute` artık iki biçimi de kabul ediyor.
  */
 
 /** Reklam gösterilmesine izin verilen rotalar */
 export const AD_ALLOWED_ROUTES = [
-  /** Namaz vakitleri — alt sabit banner */
-  '/(tabs)',
-  '/(tabs)/index',
-  /** Rehber liste ekranı — listede native reklam, detayda asla */
-  '/(tabs)/rehber',
+  /** Namaz vakitleri — sekme çubuğunun üstünde banner */
+  '/',
+  /** Rehber liste ekranı — detayda asla */
+  '/rehber',
   /** Ayarlar ve alt ekranları */
-  '/(tabs)/ayarlar',
+  '/ayarlar',
   '/konum-sec',
   '/vakit-ayarlari',
   '/okuma-ayarlari',
@@ -36,9 +41,9 @@ export const AD_ALLOWED_ROUTES = [
  */
 export const AD_FORBIDDEN_ROUTES = [
   /** Kullanıcı yön arıyor; banner ekranı daraltıyor ve dikkat dağıtıyor */
-  '/(tabs)/kible',
+  '/kible',
   /** Zikir akışı bölünmez */
-  '/(tabs)/tesbih',
+  '/tesbih',
   '/zikir-sec',
   '/tesbih-rapor',
   /** Arapça metin ve meal okunurken reklam saygısızlık olarak algılanıyor */
@@ -62,7 +67,7 @@ export type AdContext = {
   isPremium: boolean;
   /** Sıradaki vakte kalan dakika; null ise bilinmiyor */
   minutesToNextPrayer: number | null;
-  /** Ezan sesi o an çalıyor mu */
+  /** Ezan o an çalıyor mu */
   isAdhanPlaying: boolean;
   /** Rıza (UMP/ATT) akışı tamamlandı mı */
   hasConsent: boolean;
@@ -111,11 +116,29 @@ export function canShowAd(context: AdContext): AdDecision {
   return { allowed: true };
 }
 
-/** Rota eşleştirme; dinamik segmentler ([id]) desen olarak karşılaştırılır */
+/**
+ * Rotayı karşılaştırılabilir hale getirir.
+ *
+ * - Grup segmentleri `(tabs)` atılır: `usePathname()` bunları vermiyor
+ *   ama elle yazılan veya ileride değişebilecek biçimler verebilir.
+ * - `index` sonu atılır: `/(tabs)/index` ile `/` aynı ekran.
+ * - Sondaki eğik çizgi atılır.
+ */
+export function normalizeRoute(route: string): string {
+  const parts = route
+    .split('/')
+    .filter(Boolean)
+    .filter((part) => !(part.startsWith('(') && part.endsWith(')')));
+
+  if (parts[parts.length - 1] === 'index') parts.pop();
+  return `/${parts.join('/')}`;
+}
+
+/** Dinamik segmentler ([id]) desen olarak karşılaştırılır */
 function matches(route: string, pattern: string): boolean {
-  if (pattern === route) return true;
-  const patternParts = pattern.split('/').filter(Boolean);
-  const routeParts = route.split('/').filter(Boolean);
+  const routeParts = normalizeRoute(route).split('/').filter(Boolean);
+  const patternParts = normalizeRoute(pattern).split('/').filter(Boolean);
+
   if (patternParts.length !== routeParts.length) return false;
   return patternParts.every(
     (part, index) =>
