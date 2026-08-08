@@ -274,8 +274,20 @@ export default function VakitlerScreen() {
           ) : null}
         </Text>
 
+        {/*
+          "kaldı" süslemek için değil, okunabilirlik için burada.
+          Birimsiz haliyle "Akşam 24:30" bir saat gibi okunuyordu; hemen
+          altındaki "Vakit 20:19" satırıyla birlikte iki farklı saat
+          gösteriliyormuş izlenimi veriyordu. Yaşlı kullanıcı hedefli bir
+          uygulamada bu, ekranın en önemli sayısının yanlış anlaşılması
+          demek. Ekran okuyucu zaten "kaldı" diyordu (spellCountdown),
+          gören kullanıcıya söylenmiyordu.
+        */}
         <Text variant="countdown" style={{ marginTop: spacing.xs }}>
           {formatCountdown(remainingSeconds)}
+          <Text variant="heading" color="textMuted">
+            {'  kaldı'}
+          </Text>
         </Text>
 
         <View

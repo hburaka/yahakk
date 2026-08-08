@@ -57,6 +57,13 @@ function OptionGroup<T extends string>({
             onPress={() => onSelect(option.value)}
             accessibilityRole="radio"
             accessibilityState={{ selected: isSelected }}
+            /*
+              Seçenekler çerçeveli kart olarak duruyor. Önce çerçevesiz ve
+              şeffaf arka planlıydılar; ekranda düz yazı gibi görünüp
+              dokunulabilir olduklarını belli etmiyorlardı. Aynı ekrandaki
+              "Yedeği dışa aktar" gibi satırlar çerçeveliyken bunların
+              olmaması, ayarların yarısını okunamaz hale getiriyordu.
+            */
             style={({ pressed }) => ({
               flexDirection: 'row',
               alignItems: 'center',
@@ -65,11 +72,13 @@ function OptionGroup<T extends string>({
               paddingVertical: spacing.sm,
               paddingHorizontal: spacing.md,
               borderRadius: radii.md,
+              borderWidth: StyleSheet.hairlineWidth,
+              borderColor: isSelected ? period.accent : colors.border,
               backgroundColor: isSelected
                 ? period.accentSoft
                 : pressed
                   ? colors.surfaceAlt
-                  : 'transparent',
+                  : colors.surface,
             })}>
             <View
               style={{

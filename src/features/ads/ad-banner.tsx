@@ -1,6 +1,6 @@
 import { usePathname } from 'expo-router';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   BannerAd,
   BannerAdSize,
@@ -63,6 +63,10 @@ export function AdBanner() {
         alignItems: 'center',
         paddingVertical: spacing.xs,
         backgroundColor: colors.background,
+        // İçerikten ince bir çizgiyle ayrılıyor: reklamın nerede başladığı
+        // belirsiz kalırsa kullanıcı onu uygulamanın parçası sanıyor.
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: colors.border,
       }}>
       <BannerAd
         unitId={AD_UNITS.banner}

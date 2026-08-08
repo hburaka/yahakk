@@ -1,5 +1,11 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Tabs } from 'expo-router';
+// expo-router bottom-tabs'ı kendi içine gömüyor; ayrı bir paket olarak
+// kurulu değil. Bu yol SDK yükseltmesinde değişirse derleme hatası verir
+// (sessizce bozulmaz) — o zaman node_modules/expo-router/build içinde
+// BottomTabBar'ın yeni yeri aranmalı.
+import { BottomTabBar } from 'expo-router/build/react-navigation/bottom-tabs';
+import { View } from 'react-native';
 
 import { AdBanner } from '@/features/ads/ad-banner';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
@@ -17,17 +23,7 @@ export default function TabsLayout() {
   const { colors, mode } = useTheme();
   const period = usePeriodPalette();
 
-  return (
-    <>
-      <TabsNavigator colors={colors} mode={mode} accent={period.accent} />
-      {/*
-        Banner sekme çubuğunun hemen üstünde, tek bir yerde duruyor.
-        Hangi sekmede görüneceğine kendisi değil AdGate karar veriyor;
-        Kıble, Tesbih ve Rehber detaylarında hiç render edilmiyor.
-      */}
-      <AdBanner />
-    </>
-  );
+  return <TabsNavigator colors={colors} mode={mode} accent={period.accent} />;
 }
 
 function TabsNavigator({
@@ -41,6 +37,25 @@ function TabsNavigator({
 }) {
   return (
     <Tabs
+      /*
+        Banner sekme çubuğunun ÜSTÜNDE, çubuğun kendi kabının içinde.
+        Daha önce `<Tabs />` ile kardeş olarak en alta konmuştu; o
+        yerleşimde reklam sistem gezinme çubuğunun altında kalıyordu.
+        İki sonucu vardı ve ikisi de kabul edilemez: reklam kısmen
+        görünmez oluyordu ve geri/ana ekran tuşlarına basarken
+        yanlışlıkla tıklanabiliyordu. AdMob'un yanlışlıkla tıklama
+        politikası bunu hesap askıya alma sebebi sayıyor.
+
+        BottomTabBar alt güvenli alan payını kendi hesaplıyor; banner
+        onun üstünde kaldığı için gezinme çubuğuna hiç değmiyor.
+        Hangi sekmede görüneceğine yine AdGate karar veriyor.
+      */
+      tabBar={(props) => (
+        <View style={{ backgroundColor: colors.surface }}>
+          <AdBanner />
+          <BottomTabBar {...props} />
+        </View>
+      )}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: accent,
