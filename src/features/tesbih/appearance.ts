@@ -6,20 +6,53 @@ import { storage } from '@/core/store/storage';
 
 const KEY = 'tesbih.appearance';
 
-/** Dokunuş geri bildirimi biçimi */
-export type TapEffect = 'ripple' | 'pulse' | 'none';
+/**
+ * Dokunuş geri bildirimi biçimi.
+ *
+ * Hepsi kısa (≤600 ms) ve `ease-out`: dokunuş geri bildirimi, kullanıcı
+ * bir sonraki dokunuşa hazır olmadan bitmeli. Zikir hızlı çekildiğinde
+ * efektler üst üste biniyor; hiçbiri bir öncekinin bitmesini beklemez.
+ *
+ * Yalnızca `transform` ve `opacity` animasyonu var. Genişlik/yükseklik
+ * gibi düzen özelliklerini animate etmek her karede yeniden yerleşim
+ * tetikliyor ve hızlı dokunuşta gözle görülür takılma yapıyor.
+ */
+export type TapEffect =
+  /** Dokunulan noktadan yayılan dolu halka */
+  | 'ripple'
+  /** Dokunulan noktadan yayılan ince çember */
+  | 'halo'
+  /** Sayı kısaca büyür */
+  | 'pulse'
+  /** Sayı yerinde hafifçe oturur */
+  | 'bounce'
+  /** Ekran kenarından içeri doğru kısa bir parlama */
+  | 'glow'
+  | 'none';
 
 export const TAP_EFFECT_LABELS: Record<TapEffect, string> = {
   ripple: 'Su damlası',
+  halo: 'Çember',
   pulse: 'Nabız',
+  bounce: 'Yaylanma',
+  glow: 'Parıltı',
   none: 'Yok',
 };
 
 export const TAP_EFFECT_HINTS: Record<TapEffect, string> = {
-  ripple: 'Dokunduğunuz noktadan bir halka yayılır',
+  ripple: 'Dokunduğunuz noktadan dolu bir halka yayılır',
+  halo: 'Dokunduğunuz noktadan ince bir çember büyüyerek kaybolur',
   pulse: 'Sayı kısaca büyüyüp küçülür',
+  bounce: 'Sayı hafifçe aşağı inip yerine oturur',
+  glow: 'Ekranın kenarı bir an için aydınlanır',
   none: 'Görsel geri bildirim olmaz',
 };
+
+/** Dokunulan noktada çizilen efektler — konum bilgisi gerektirir */
+export const POINT_EFFECTS: readonly TapEffect[] = ['ripple', 'halo'];
+
+/** Sayının kendisini hareket ettiren efektler */
+export const COUNTER_EFFECTS: readonly TapEffect[] = ['pulse', 'bounce'];
 
 /**
  * Efekt rengi.

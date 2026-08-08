@@ -43,6 +43,13 @@ export const StorageKeys = {
   zikirTarget: 'tesbih.target',
   /** Zincirli sette kaçıncı adımda kalındığı */
   zikirSetStep: 'tesbih.setStep',
+  /**
+   * Varsayılan favoriler bir kez eklendi mi.
+   *
+   * Bayrak olmadan, tüm favorilerini silen kullanıcının karşısına
+   * varsayılanlar tekrar çıkardı — sildiği şey geri gelirdi.
+   */
+  favoritesSeeded: 'tesbih.favoritesSeeded',
   onboardingCompleted: 'onboarding.completed',
   /** ATT izni kaç açılıştır ertelendi — 2-3. açılışta sorulacak */
   launchCount: 'app.launchCount',

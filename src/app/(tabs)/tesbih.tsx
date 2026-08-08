@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { Button } from '@/core/ui/button';
+import { Button, IconButton } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
@@ -18,7 +18,9 @@ import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import {
   EFFECT_COLOR_VALUES,
   EFFECT_SIZE_RADIUS,
+  POINT_EFFECTS,
   useTesbihAppearance,
+  type TapEffect,
 } from '@/features/tesbih/appearance';
 import {
   getZikirTemplate,
@@ -35,46 +37,50 @@ const RAIL_WIDTH = 3;
 /** Hızlı geçiş şeridinin sabit yüksekliği (çip 40 + nefes) */
 const QUICK_ROW_HEIGHT = 52;
 
-/** Hızlı geçiş şeridinde setlerden sonra gelen tekil zikirler */
-const QUICK_TEMPLATE_IDS = [
-  'tehlil',
-  'estagfirullah',
-  'salavat-kisa',
-  'subhanallahi-ve-bihamdihi',
-];
-
 type TapPoint = { x: number; y: number; id: number };
 
 /**
- * Dokunuş dalgası — su damlası gibi, dokunulan noktadan yayılır.
+ * Dokunulan noktada çizilen efekt — su damlası veya çember.
+ *
+ * İkisi de aynı geometriyi kullanıyor, farkı doluluk: `ripple` dolu bir
+ * daire, `halo` yalnızca kenar çizgisi. Çember daha az yer kaplıyor ve
+ * arkasındaki Arapça metni örtmüyor; hızlı zikir çekenler için daha
+ * sakin bir seçenek.
  *
  * Sadece `transform` ve `opacity` animasyonu var; genişlik/yükseklik
  * gibi düzen özelliklerini animate etmek her karede yeniden yerleşim
  * tetikliyor ve hızlı dokunuşta gözle görülür takılma yapıyor.
  */
-function TapRipple({
+function TapPointEffect({
   tap,
+  effect,
   color,
   radius,
 }: {
   tap: TapPoint | null;
+  effect: TapEffect;
   color: string;
   radius: number;
 }) {
   const progress = useSharedValue(0);
+  const isHalo = effect === 'halo';
 
   useEffect(() => {
     if (!tap) return;
     progress.value = 0;
     progress.value = withTiming(1, {
-      duration: 520,
+      duration: isHalo ? 460 : 520,
       easing: Easing.out(Easing.quad),
     });
-  }, [tap, progress]);
+  }, [tap, isHalo, progress]);
 
   const style = useAnimatedStyle(() => ({
-    opacity: 0.35 * (1 - progress.value),
-    transform: [{ scale: 0.15 + progress.value * 0.85 }],
+    opacity: (isHalo ? 0.55 : 0.35) * (1 - progress.value),
+    // Çember daha küçük başlayıp daha çok büyüyor; dolu daireyle aynı
+    // eğride ilerlerse ince çizgi ilk karelerde nokta gibi görünüyor.
+    transform: [
+      { scale: (isHalo ? 0.05 : 0.15) + progress.value * (isHalo ? 1.1 : 0.85) },
+    ],
   }));
 
   if (!tap) return null;
@@ -90,7 +96,9 @@ function TapRipple({
           width: radius * 2,
           height: radius * 2,
           borderRadius: radius,
-          backgroundColor: color,
+          ...(isHalo
+            ? { borderWidth: 2, borderColor: color }
+            : { backgroundColor: color }),
         },
         style,
       ]}
@@ -98,32 +106,87 @@ function TapRipple({
   );
 }
 
-/** Sayının kısa nabzı — dalga yerine tercih edilebiliyor */
-function usePulse(tap: TapPoint | null, enabled: boolean) {
+/**
+ * Ekranın kenarından içeri doğru kısa bir parlama.
+ *
+ * Dokunulan noktayı işaretlemiyor, bütün ekranın "kaydettim" demesini
+ * sağlıyor. Ekrana bakmadan, göz ucuyla sayanlar için: efekt nerede
+ * olduğunu aramaya gerek kalmıyor.
+ */
+function TapGlow({ tap, color }: { tap: TapPoint | null; color: string }) {
   const progress = useSharedValue(0);
 
   useEffect(() => {
-    if (!tap || !enabled) return;
+    if (!tap) return;
     progress.value = 0;
     progress.value = withTiming(1, {
-      duration: 260,
+      duration: 420,
       easing: Easing.out(Easing.quad),
     });
-  }, [tap, enabled, progress]);
+  }, [tap, progress]);
 
-  return useAnimatedStyle(() => ({
-    transform: [
-      { scale: 1 + 0.08 * Math.sin(progress.value * Math.PI) },
-    ],
+  const style = useAnimatedStyle(() => ({
+    opacity: 0.5 * (1 - progress.value),
   }));
+
+  if (!tap) return null;
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      style={[
+        {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderWidth: 4,
+          borderColor: color,
+          borderRadius: 4,
+        },
+        style,
+      ]}
+    />
+  );
+}
+
+/**
+ * Sayının kendi hareketi — nabız veya yaylanma.
+ *
+ * `pulse` büyütüp küçültüyor, `bounce` aşağı indirip yerine oturtuyor.
+ * İkincisi daha az dikkat çekiyor; büyüyen sayı, satır yüksekliği sabit
+ * olduğu için komşu satırlara doğru taşıyormuş gibi görünüyor.
+ */
+function useCounterMotion(tap: TapPoint | null, effect: TapEffect) {
+  const progress = useSharedValue(0);
+  const active = effect === 'pulse' || effect === 'bounce';
+  const isBounce = effect === 'bounce';
+
+  useEffect(() => {
+    if (!tap || !active) return;
+    progress.value = 0;
+    progress.value = withTiming(1, {
+      duration: isBounce ? 300 : 260,
+      easing: Easing.out(Easing.quad),
+    });
+  }, [tap, active, isBounce, progress]);
+
+  return useAnimatedStyle(() => {
+    if (!active) return {};
+    const wave = Math.sin(progress.value * Math.PI);
+    return isBounce
+      ? { transform: [{ translateY: 10 * wave }] }
+      : { transform: [{ scale: 1 + 0.08 * wave }] };
+  });
 }
 
 /**
  * Hızlı geçiş şeridi.
  *
- * Namaz sonrası tesbihat günde beş kez açılıyor; her seferinde modala
- * girip liste gezmek kabul edilemez. En çok kullanılanlar burada tek
- * dokunuşla değişiyor, tam liste "Değiştir"de kalıyor.
+ * Namaz sonrası tesbihat günde beş kez açılıyor; her seferinde listeye
+ * girip gezmek kabul edilemez. Favoriler burada tek dokunuşla
+ * değişiyor; tam liste yanındaki liste düğmesinde.
  */
 function QuickSwitcher({
   selection,
@@ -136,27 +199,22 @@ function QuickSwitcher({
   const period = usePeriodPalette();
 
   /*
-    Şerit: önce favoriler, sonra varsayılanlar — hiçbir şey kaybolmadan.
+    Şerit = favori listesi. Başka kaynak yok.
 
-    Önce "favori varsa yalnızca favoriler" mantığı vardı. Tek bir zikri
-    yıldızlamak, şeritteki her şeyi (namaz tesbihatı dahil) siliyordu;
-    kullanıcı bir şey kazandığını sanırken erişimini kaybediyordu.
+    Tek kural olmasının sebebi: önce "favoriler + varsayılanlar" karışık
+    gösteriliyordu ve kullanıcı hangisinin kendi seçimi olduğunu
+    anlayamıyordu. Yıldızladığı zikir altı benzer çipin arasına karışıp
+    kayboluyordu.
 
-    Sıralama kullanım sıklığına göre değil. Sıklık, günde beş kez aynı
-    yere bakan biri için şeridin sırasını sürekli değiştirir ve kas
-    hafızasını bozar. Kullanıcı neyin nerede duracağına yıldızla kendisi
-    karar veriyor.
+    İlk açılıştaki beş çip de gerçek favori kaydı (bkz.
+    DEFAULT_FAVORITE_IDS) — yıldızı kaldırılınca şeritten çıkıyorlar.
+    Gördüğün şey her zaman senin listen.
+
+    Sıralama kullanım sıklığına göre değil, favoriye ekleme sırasına
+    göre. Sıklık, günde beş kez aynı yere bakan biri için şeridin
+    sırasını sürekli değiştirir ve kas hafızasını bozar.
   */
-  const source = useMemo(() => {
-    const defaults = [
-      ...ZIKIR_SETS.map((set) => `s:${set.id}`),
-      ...QUICK_TEMPLATE_IDS.map((id) => `t:${id}`),
-    ];
-    const seen = new Set(favoriteIds);
-    return [...favoriteIds, ...defaults.filter((id) => !seen.has(id))];
-  }, [favoriteIds]);
-
-  const items = source
+  const items = favoriteIds
     .map((id) => {
       if (id.startsWith('s:')) {
         const set = ZIKIR_SETS.find((item) => item.id === id.slice(2));
@@ -183,6 +241,22 @@ function QuickSwitcher({
       };
     })
     .filter((item) => item !== null);
+
+  /*
+    Kullanıcı bütün favorilerini kaldırabilir. Şeridi sessizce yok
+    etmek yerine geri dönüş yolunu gösteriyoruz; aksi halde özellik
+    kaybolmuş gibi görünür.
+  */
+  if (items.length === 0) {
+    return (
+      <View style={{ paddingHorizontal: spacing.xl }}>
+        <Text variant="caption" color="textMuted">
+          Favori zikriniz yok. Yandaki listeden yıldızladıklarınız burada
+          görünür.
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView
@@ -363,7 +437,7 @@ export default function TesbihScreen() {
 
   const { appearance } = useTesbihAppearance();
   const [tap, setTap] = useState<TapPoint | null>(null);
-  const pulseStyle = usePulse(tap, appearance.tapEffect === 'pulse');
+  const counterStyle = useCounterMotion(tap, appearance.tapEffect);
 
   const effectColor =
     appearance.effectColor === 'period'
@@ -373,50 +447,26 @@ export default function TesbihScreen() {
 
   return (
     <Screen>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: spacing.xl,
-          paddingVertical: spacing.sm,
-          gap: spacing.md,
-        }}>
-        {/*
-          Başlıkta yalnızca ekranın ortasında BULUNMAYAN bilgi durur.
+      {/*
+        Ekranın üstünde yalnızca durum var, kontrol yok.
 
-          Önce burada zikrin adı ve hedefi yazıyordu; ikisi de altta
-          zaten vardı. Üstelik şablonların çoğunda `name` ile
-          `transliteration` birebir aynı metin, yani aynı satır ekranda
-          iki kez görünüyordu. Tek zikirde başlık tamamen kalktı.
+        Önce burada başlık satırı ve favori şeridi duruyordu: içeriği
+        görmeden önce iki sıra kontrol geçiyordun ve tek zikirde ilk sıra
+        neredeyse boştu. Bu ekranda yapılan iş "aç ve dokun"; zikri
+        değiştirmek arada bir yapılan bir hazırlık. Kontroller aşağıya,
+        başparmağın rahat eriştiği yere alındı — 6,7 inçlik bir telefonda
+        ekranın üstü tek elle zor erişiliyor.
 
-          Set seçiliyse durum farklı: setin adı ve kaçıncı adımda
-          olunduğu aşağıda hiçbir yerde yok. Onlar kalıyor, gerisi
-          değil.
-        */}
-        {isSet && selected.set ? (
-          <View style={{ flex: 1 }}>
-            <Text variant="bodyStrong" numberOfLines={2}>
-              {selected.set.name}
-            </Text>
-            <Text variant="caption" color="textSecondary">
-              {`${selected.stepIndex + 1}. adım / ${selected.totalSteps}`}
-            </Text>
-          </View>
-        ) : (
-          <View style={{ flex: 1 }} />
-        )}
-        {/* Önce çerçevesiz, şeffaf ve soluk renkli düz metindi; ekrandaki
-            zikir adından ve açıklamalardan ayırt edilemiyordu. Artık
-            uygulamanın ortak buton dilini kullanıyor. */}
-        <Button
-          label="Değiştir"
-          trailingIcon="chevron-right"
-          onPress={() => router.push('/zikir-sec')}
-          accessibilityLabel="Zikir değiştir"
-        />
-      </View>
-
-      <QuickSwitcher selection={selected} favoriteIds={favorites.ids} />
+        Tek zikirde burası tamamen boş kalıyor ve öyle olması doğru.
+      */}
+      {isSet && selected.set ? (
+        <View
+          style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.sm }}>
+          <Text variant="caption" color="textSecondary" numberOfLines={2}>
+            {`${selected.set.name} · ${selected.stepIndex + 1}. adım / ${selected.totalSteps}`}
+          </Text>
+        </View>
+      ) : null}
 
       {/*
         Ekranın gövdesinin tamamı dokunma hedefi. Geri al ve sıfırla
@@ -438,10 +488,33 @@ export default function TesbihScreen() {
         accessibilityLabel={`Say. ${counter.count} / ${selected.target}`}
         accessibilityHint="Zikri bir artırmak için ekrana dokunun"
         style={{ flex: 1, overflow: 'hidden' }}>
-        {appearance.tapEffect === 'ripple' ? (
-          <TapRipple tap={tap} color={effectColor} radius={effectRadius} />
+        {POINT_EFFECTS.includes(appearance.tapEffect) ? (
+          <TapPointEffect
+            tap={tap}
+            effect={appearance.tapEffect}
+            color={effectColor}
+            radius={effectRadius}
+          />
         ) : null}
+        {appearance.tapEffect === 'glow' ? (
+          <TapGlow tap={tap} color={effectColor} />
+        ) : null}
+        {/*
+          `pointerEvents="none"` bir hatayı çözüyor: dokunuş dalgası
+          sayının üzerine basıldığında sol üst köşede çıkıyordu.
+
+          Sebebi `locationX/locationY`nin dokunulan ÖĞEYE göre ölçülmesi.
+          Boş alana basınca hedef Pressable oluyor ve koordinat doğru
+          geliyor; sayının üstüne basınca hedef sayı oluyor ve koordinat
+          onun kendi içinde küçük bir değere düşüyor, dalga da oraya
+          çiziliyordu.
+
+          İçerik dokunuşa hiç katılmayınca hedef her zaman Pressable
+          kalıyor ve koordinat tutarlı oluyor. Bu blokta tıklanabilir bir
+          şey zaten yok.
+        */}
         <View
+          pointerEvents="none"
           style={{
             flex: 1,
             alignItems: 'center',
@@ -472,7 +545,7 @@ export default function TesbihScreen() {
           <View style={{ alignItems: 'center', gap: spacing.xs }}>
             {/* Kayıt yüklenirken 0 gösterilirse, yarım oturum gelince
                 sayı zıplıyor. Yer ayrılıp boş bırakılıyor. */}
-            <Animated.View style={pulseStyle}>
+            <Animated.View style={counterStyle}>
               <Text
                 variant="countdown"
                 style={{
@@ -574,61 +647,76 @@ export default function TesbihScreen() {
         </View>
       </Pressable>
 
+      {/*
+        Kontrol bölgesi. Sayaç alanının dışında, tek bir ayraçla
+        ayrılmış: sayarken yanlışlıkla basılmasın.
+
+        İki sıra var ve sırası bilinçli. Üstte zikir değiştirme (oturum
+        ARASINDA yapılan iş), altta geri al ve sıfırla (oturum SIRASINDA
+        yapılan iş). Sık kullanılan başparmağa daha yakın.
+      */}
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingHorizontal: spacing.md,
-          paddingTop: spacing.sm,
-          paddingBottom: spacing.lg,
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: colors.border,
         }}>
-        {/* Sessiz seviye: sayaç ekranın asıl eylemi, bunlar yardımcı.
-            Yine de arka planları var — şeffaf bırakıldıklarında ekrandaki
-            açıklama yazılarından ayırt edilemiyorlardı. */}
-        <Button
-          variant="quiet"
-          icon="undo-variant"
-          label="Geri al"
-          onPress={counter.undo}
-          disabled={counter.count === 0}
-        />
-
-        {/*
-          Rapor düğmesi ortada. Önce başlıkta duruyordu; oraya sayarken
-          bakılmıyor ve salt ikon olarak dekoratif bir simge gibi
-          görünüyordu. Burada iki yardımcı eylemin arasında, aynı sessiz
-          seviyede duruyor. Sayaç alanının dışında kaldığı için sayarken
-          yanlışlıkla basılmıyor.
-        */}
-        <Pressable
-          onPress={() => router.push('/tesbih-rapor')}
-          accessibilityRole="button"
-          accessibilityLabel="Tesbihat raporu ve istatistikler"
-          style={({ pressed }) => ({
-            width: MIN_TOUCH_TARGET,
-            height: MIN_TOUCH_TARGET,
+        <View
+          style={{
+            flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: MIN_TOUCH_TARGET / 2,
-            backgroundColor: pressed ? colors.border : colors.surfaceAlt,
-          })}>
-          <MaterialCommunityIcons
-            name="chart-timeline-variant"
-            size={22}
-            color={colors.textSecondary}
+            gap: spacing.sm,
+            paddingRight: spacing.xl,
+            paddingTop: spacing.sm,
+          }}>
+          <View style={{ flex: 1 }}>
+            <QuickSwitcher selection={selected} favoriteIds={favorites.ids} />
+          </View>
+          {/*
+            Burada "Değiştir" yazan geniş bir buton vardı. Yanındaki
+            şerit zaten favorileri gösteriyor; bu düğmenin tek işi tam
+            listeyi açmak, onu anlatmak için kelimeye gerek yok.
+          */}
+          <IconButton
+            icon="format-list-bulleted"
+            onPress={() => router.push('/zikir-sec')}
+            accessibilityLabel="Tüm zikirler; favorileri buradan düzenleyin"
           />
-        </Pressable>
+        </View>
 
-        <Button
-          variant="quiet"
-          icon="refresh"
-          label="Sıfırla"
-          onPress={counter.reset}
-          disabled={counter.count === 0}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.sm,
+            paddingBottom: spacing.lg,
+          }}>
+          {/* Sessiz seviye: sayaç ekranın asıl eylemi, bunlar yardımcı.
+              Yine de arka planları var — şeffaf bırakıldıklarında ekrandaki
+              açıklama yazılarından ayırt edilemiyorlardı. */}
+          <Button
+            variant="quiet"
+            icon="undo-variant"
+            label="Geri al"
+            onPress={counter.undo}
+            disabled={counter.count === 0}
+          />
+
+          <IconButton
+            icon="chart-timeline-variant"
+            onPress={() => router.push('/tesbih-rapor')}
+            accessibilityLabel="Tesbihat raporu ve istatistikler"
+          />
+
+          <Button
+            variant="quiet"
+            icon="refresh"
+            label="Sıfırla"
+            onPress={counter.reset}
+            disabled={counter.count === 0}
+          />
+        </View>
       </View>
     </Screen>
   );

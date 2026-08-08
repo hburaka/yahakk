@@ -125,6 +125,55 @@ export function Button({
 }
 
 /**
+ * Salt ikon düğmesi.
+ *
+ * Etiketin gerçekten gereksiz olduğu yerler için: yanındaki içerik ne
+ * olduğunu zaten söylüyorsa (favori şeridinin yanındaki "tam listeyi aç"
+ * gibi) metin yer kaplamaktan başka iş yapmıyor.
+ *
+ * Zemini her zaman var. Zeminsiz ikon bu projede bir kez denendi ve
+ * ekranda dekoratif bir simge gibi durdu, dokunulabilir olduğu
+ * anlaşılmadı. Ekran okuyucu etiketi bu yüzden zorunlu bir alan.
+ */
+export function IconButton({
+  icon,
+  onPress,
+  accessibilityLabel,
+  disabled = false,
+}: {
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  onPress: () => void;
+  accessibilityLabel: string;
+  disabled?: boolean;
+}) {
+  const { colors } = useTheme();
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ disabled }}
+      style={({ pressed }) => ({
+        width: MIN_TOUCH_TARGET,
+        height: MIN_TOUCH_TARGET,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: MIN_TOUCH_TARGET / 2,
+        backgroundColor: pressed ? colors.border : colors.surfaceAlt,
+        opacity: disabled ? 0.4 : 1,
+      })}>
+      <MaterialCommunityIcons
+        name={icon}
+        size={22}
+        color={colors.textSecondary}
+      />
+    </Pressable>
+  );
+}
+
+/**
  * Yan yana duran buton grubu. Aralarındaki boşluğu ve sarmalamayı tek
  * yerden tutar; her ekranın kendi flex satırını kurması sonucu butonlar
  * arası mesafe ekrandan ekrana değişiyordu.

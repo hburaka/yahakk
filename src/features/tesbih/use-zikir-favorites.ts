@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { db } from '@/core/db/client';
 import { favorites } from '@/core/db/schema';
+import { storage, StorageKeys } from '@/core/store/storage';
 
 /**
  * Favori kimliği, seçim kodlamasıyla aynı: `t:<şablon>` tekil zikir,
@@ -18,6 +19,30 @@ export function templateFavoriteId(templateId: string): FavoriteId {
 export function setFavoriteId(setId: string): FavoriteId {
   return `s:${setId}`;
 }
+
+/**
+ * İlk açılışta eklenen beş favori.
+ *
+ * Şerit **yalnızca favorileri** gösteriyor; varsayılan diye ayrı bir
+ * liste yok. Önce öyleydi ve model bulanıktı: kullanıcı bir zikri
+ * yıldızlıyor, o zikir varsayılanların arasına karışıyor, hangisinin
+ * kendi seçimi olduğu anlaşılmıyordu.
+ *
+ * Bunlar gerçek favori kaydı olarak ekleniyor. Yani ilk açılışta görülen
+ * şerit sahte değil: kullanıcı "Değiştir"e girip yıldızı kaldırdığında
+ * şeritten gerçekten çıkıyor.
+ *
+ * Seçim günlük kullanım sıklığına göre: namaz tesbihatı günde beş kez
+ * açılıyor, uyku öncesi bir kez — o yüzden ikincisi listede değil ama
+ * yıldızlanabilir durumda.
+ */
+export const DEFAULT_FAVORITE_IDS: readonly FavoriteId[] = [
+  setFavoriteId('namaz-tesbihati'),
+  templateFavoriteId('tehlil'),
+  templateFavoriteId('estagfirullah'),
+  templateFavoriteId('salavat-kisa'),
+  templateFavoriteId('subhanallahi-ve-bihamdihi'),
+];
 
 export type ZikirFavorites = {
   ids: FavoriteId[];
@@ -49,14 +74,30 @@ export function useZikirFavorites(): ZikirFavorites {
     async function load() {
       let ids: FavoriteId[] = [];
       try {
+        // İlk açılışta beş varsayılan favori gerçek kayıt olarak
+        // ekleniyor. Bayrak sayesinde yalnızca bir kez: hepsini silen
+        // kullanıcının karşısına tekrar çıkmıyor.
+        if (storage.getString(StorageKeys.favoritesSeeded) !== 'true') {
+          await db
+            .insert(favorites)
+            .values(
+              DEFAULT_FAVORITE_IDS.map((itemId) => ({
+                kind: 'zikir' as const,
+                itemId,
+              }))
+            )
+            .onConflictDoNothing();
+          storage.set(StorageKeys.favoritesSeeded, 'true');
+        }
+
         const rows = await db
           .select()
           .from(favorites)
           .where(eq(favorites.kind, 'zikir'));
         ids = rows.map((row) => row.itemId);
       } catch {
-        // Okuma başarısızsa favorisiz devam edilir; şerit varsayılan
-        // listeye düşer, kullanıcı hiçbir şey kaybetmez.
+        // Okuma veya tohumlama başarısızsa favorisiz devam edilir;
+        // şerit boş durum mesajı gösterir, ekran çökmez.
       }
       if (cancelled) return;
       setState({ ids, isLoading: false });
