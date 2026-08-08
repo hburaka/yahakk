@@ -1,11 +1,13 @@
 import type { IlmihalTopicContent } from '../types';
 
 import { ABDEST } from './abdest';
+import { BAYRAM, CEMAAT, CENAZE, CUMA } from './cemaat';
 import {
   NAMAZI_BOZANLAR,
   NAMAZIN_FARZLARI,
   NAMAZIN_KILINISI,
 } from './namaz';
+import { KAZA, SEFERILIK, SEHIV_SECDESI } from './namaz-durumlar';
 import { ABDEST_BOZAN, GUSUL, TEYEMMUM } from './temizlik';
 
 /**
@@ -25,6 +27,13 @@ const TOPICS: readonly IlmihalTopicContent[] = [
   NAMAZIN_FARZLARI,
   NAMAZIN_KILINISI,
   NAMAZI_BOZANLAR,
+  SEHIV_SECDESI,
+  CEMAAT,
+  CUMA,
+  BAYRAM,
+  CENAZE,
+  SEFERILIK,
+  KAZA,
 ];
 
 export const ILMIHAL_CONTENT: Record<string, IlmihalTopicContent> =

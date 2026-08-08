@@ -69,7 +69,10 @@ export const ILMIHAL_SECTIONS: readonly IlmihalSection[] = [
       { id: 'namazin-farzlari', title: 'Namazın Farzları', madhabSpecific: true },
       { id: 'namazi-bozanlar', title: 'Namazı Bozan Durumlar', madhabSpecific: true },
       { id: 'sehiv-secdesi', title: 'Sehiv Secdesi', madhabSpecific: true },
-      { id: 'cemaat', title: 'Cemaatle Namaz', madhabSpecific: false },
+      // Mezhebe göre değişir: Şâfiî'de imama uyan kişi Fâtiha'yı kendisi
+      // okumakla yükümlü, Hanefî'de susup imamı dinler. Pratikte en sık
+      // karşılaşılan farklardan biri.
+      { id: 'cemaat', title: 'Cemaatle Namaz', madhabSpecific: true },
       { id: 'cuma', title: 'Cuma Namazı', madhabSpecific: true },
       { id: 'bayram', title: 'Bayram Namazı', madhabSpecific: true },
       { id: 'cenaze', title: 'Cenaze Namazı', madhabSpecific: true },
