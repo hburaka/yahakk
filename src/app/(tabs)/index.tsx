@@ -10,6 +10,7 @@ import {
   spellCountdown,
   spellMinutes,
 } from '@/features/prayer-times/period';
+import { DailyContent } from '@/features/daily/daily-content';
 import { marginFor } from '@/features/prayer-times/margins';
 import {
   PRAYER_A11Y_LABELS,
@@ -333,6 +334,17 @@ export default function VakitlerScreen() {
             ? 'Kaynak: Diyanet İşleri Başkanlığı'
             : 'Cihazda hesaplandı'}
         </Text>
+      </View>
+
+      <View
+        style={{
+          marginTop: spacing.section,
+          paddingTop: spacing.xl,
+          marginBottom: spacing.xxxl,
+          borderTopWidth: StyleSheet.hairlineWidth,
+          borderTopColor: colors.border,
+        }}>
+        <DailyContent isoDate={schedule.date} />
       </View>
     </Screen>
   );
