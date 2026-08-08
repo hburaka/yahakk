@@ -88,8 +88,7 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true,
-            "kotlinVersion": "2.3.21"
+            "enableShrinkResourcesInReleaseBuilds": true
           },
           "ios": {
             "useFrameworks": "static"
