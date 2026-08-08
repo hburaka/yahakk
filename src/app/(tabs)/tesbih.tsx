@@ -3,6 +3,7 @@ import { useKeepAwake } from 'expo-keep-awake';
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useMMKVString } from 'react-native-mmkv';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -11,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { announce } from '@/core/a11y/screen-reader';
+import { storage, StorageKeys } from '@/core/store/storage';
 import { Button, IconButton } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
@@ -31,6 +33,7 @@ import {
   useCounter,
   type CounterScope,
 } from '@/features/tesbih/use-counter';
+import { useShakeCounter } from '@/features/tesbih/use-shake-counter';
 import { useZikirFavorites } from '@/features/tesbih/use-zikir-favorites';
 import { useZikirSelection } from '@/features/tesbih/use-zikir-selection';
 
@@ -437,6 +440,35 @@ export default function TesbihScreen() {
   const notStarted = counter.count === 0;
 
   /*
+    Sayma kipi: kontroller gizleniyor, ekranın tamamı tek dokunma hedefi.
+
+    Kimin için: ekrana nişan alamayan kullanıcılar. Görme engelli biri
+    için "doğru yere dokunmak" gereksiz bir engel; yaşlı bir kullanıcı
+    için de titreyen elle küçük bir alana isabet ettirmek zor.
+
+    Tercih olarak saklanıyor: bu kipe ihtiyacı olan kişi her açılışta
+    yeniden kurmak zorunda kalmamalı.
+  */
+  const [storedFullscreen, setStoredFullscreen] = useMMKVString(
+    StorageKeys.tesbihFullscreen,
+    storage
+  );
+  const fullscreen = storedFullscreen === 'true';
+
+  const [storedShake, setStoredShake] = useMMKVString(
+    StorageKeys.tesbihShake,
+    storage
+  );
+  const shakeEnabled = storedShake === 'true';
+
+  const increment = counter.increment;
+  useShakeCounter({
+    // Sallama yalnızca bu ekran açıkken ve zikir devam ederken dinleniyor
+    enabled: shakeEnabled && !advancing,
+    onShake: increment,
+  });
+
+  /*
     Ekran okuyucu duyuruları.
 
     Sayaç etiketi sabit tutulduğu için (yukarıdaki gerekçeye bakın)
@@ -491,12 +523,33 @@ export default function TesbihScreen() {
 
         Tek zikirde burası tamamen boş kalıyor ve öyle olması doğru.
       */}
-      {isSet && selected.set ? (
+      {isSet && selected.set && !fullscreen ? (
         <View
           style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.sm }}>
           <Text variant="caption" color="textSecondary" numberOfLines={2}>
             {`${selected.set.name} · ${selected.stepIndex + 1}. adım / ${selected.totalSteps}`}
           </Text>
+        </View>
+      ) : null}
+
+      {/*
+        Sayma kipinden çıkış. Küçük ve köşede, ama tam dokunma hedefi
+        boyutunda: sayarken yanlışlıkla basılmayacak kadar kenarda,
+        aranınca bulunacak kadar belirgin. Kipten çıkışın tek yolu bu
+        olduğu için gizlenemez.
+      */}
+      {fullscreen ? (
+        <View
+          style={{
+            alignItems: 'flex-end',
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.xs,
+          }}>
+          <IconButton
+            icon="fullscreen-exit"
+            onPress={() => setStoredFullscreen('false')}
+            accessibilityLabel="Sayma kipinden çık, kontrolleri göster"
+          />
         </View>
       ) : null}
 
@@ -516,7 +569,25 @@ export default function TesbihScreen() {
           counter.increment();
         }}
         disabled={advancing}
-        accessibilityRole="button"
+        /*
+          `adjustable` rolü, ekran okuyucuda çift dokunuş zorunluluğunu
+          kaldırıyor: TalkBack ve VoiceOver bu rolde YUKARI KAYDIR ile
+          artırma, aşağı kaydır ile azaltma yapıyor. Tek parmakla tek
+          hareket — düğmede odaklanıp çift dokunmaktan çok daha hızlı ve
+          zikrin ritmini bozmuyor.
+
+          Dokunarak sayma aynen çalışmaya devam ediyor; bu yalnızca
+          ekran okuyucuya ek bir yol açıyor.
+        */
+        accessibilityRole="adjustable"
+        accessibilityActions={[
+          { name: 'increment', label: 'Bir artır' },
+          { name: 'decrement', label: 'Bir geri al' },
+        ]}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === 'increment') counter.increment();
+          if (event.nativeEvent.actionName === 'decrement') counter.undo();
+        }}
         /*
           Etiket SABİT. İçinde sayı yok ve bu bilinçli.
 
@@ -717,6 +788,7 @@ export default function TesbihScreen() {
         ARASINDA yapılan iş), altta geri al ve sıfırla (oturum SIRASINDA
         yapılan iş). Sık kullanılan başparmağa daha yakın.
       */}
+      {fullscreen ? null : (
       <View
         style={{
           borderTopWidth: StyleSheet.hairlineWidth,
@@ -742,6 +814,34 @@ export default function TesbihScreen() {
             icon="format-list-bulleted"
             onPress={() => router.push('/zikir-sec')}
             accessibilityLabel="Tüm zikirler; favorileri buradan düzenleyin"
+          />
+        </View>
+
+        {/*
+          Sayma yardımcıları. İkisi de ekrana nişan almayı gereksiz
+          kılıyor; ayrı bir ayar ekranına gömmek yerine burada, işin
+          yapıldığı yerde duruyorlar.
+        */}
+        <View
+          style={{
+            flexDirection: 'row',
+            gap: spacing.sm,
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.sm,
+          }}>
+          <IconButton
+            icon={shakeEnabled ? 'vibrate' : 'vibrate-off'}
+            onPress={() => setStoredShake(shakeEnabled ? 'false' : 'true')}
+            accessibilityLabel={
+              shakeEnabled
+                ? 'Sallayarak sayma açık. Kapatmak için dokunun.'
+                : 'Sallayarak sayma kapalı. Açmak için dokunun. Açıkken telefonu ileri geri salladığınızda sayaç bir artar.'
+            }
+          />
+          <IconButton
+            icon="fullscreen"
+            onPress={() => setStoredFullscreen('true')}
+            accessibilityLabel="Sayma kipi. Kontroller gizlenir, ekranın tamamı sayma alanı olur."
           />
         </View>
 
@@ -780,6 +880,7 @@ export default function TesbihScreen() {
           />
         </View>
       </View>
+      )}
     </Screen>
   );
 }

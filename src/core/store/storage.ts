@@ -44,6 +44,17 @@ export const StorageKeys = {
   /** Zincirli sette kaçıncı adımda kalındığı */
   zikirSetStep: 'tesbih.setStep',
   /**
+   * Sallayarak sayma açık mı.
+   *
+   * Varsayılan KAPALI ve bu bilinçli. Yanlış sayım sessiz bir hata:
+   * kullanıcı zikri çektiğini sanır, çekmemiştir. Açan kişi ne yaptığını
+   * bilmeli. Algılama yön değişimi arayarak yürüyüş ve darbeleri eliyor
+   * (bkz. shake.ts) ama sıfır risk diye bir şey yok.
+   */
+  tesbihShake: 'tesbih.shake',
+  /** Tesbihte sayma kipi (kontroller gizli, ekranın tamamı hedef) */
+  tesbihFullscreen: 'tesbih.fullscreen',
+  /**
    * Kıblede titreşimle yön bulma açık mı.
    *
    * Varsayılan açık: bu ekrana zaten kıbleyi aramak için giriliyor,
