@@ -1,7 +1,7 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import * as Haptics from 'expo-haptics';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useMMKVString } from 'react-native-mmkv';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -9,10 +9,13 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { storage, StorageKeys } from '@/core/store/storage';
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { useTheme } from '@/core/ui/theme-context';
 import { describeDirection } from '@/features/qibla/bearing';
 import { useQibla } from '@/features/qibla/use-qibla';
+import { useQiblaHaptics } from '@/features/qibla/use-qibla-haptics';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 
 const DIAL_SIZE = 276;
@@ -176,15 +179,25 @@ export default function KibleScreen() {
   const period = usePeriodPalette();
   const state = useQibla();
 
-  const wasAligned = useRef(false);
   const isAligned = state.status === 'ready' && state.isAligned;
 
-  useEffect(() => {
-    if (isAligned && !wasAligned.current) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
-    wasAligned.current = isAligned;
-  }, [isAligned]);
+  /*
+    Titreşimle yön bulma. Varsayılan açık, tek dokunuşla kapanıyor.
+
+    Hizalanma anındaki tek titreşim buradan yönetiliyor artık; ayrı bir
+    efekt bırakmak iki kaynaktan üst üste titreşim demekti.
+  */
+  const [storedHaptics, setStoredHaptics] = useMMKVString(
+    StorageKeys.qiblaHaptics,
+    storage
+  );
+  const hapticsEnabled = storedHaptics !== 'false';
+
+  useQiblaHaptics({
+    delta: state.status === 'ready' ? state.delta : null,
+    isAligned,
+    enabled: hapticsEnabled,
+  });
 
   /**
    * Ekran okuyucu her 60 ms'de bir konuşamaz. Açıyı 10 derecelik
@@ -296,14 +309,39 @@ export default function KibleScreen() {
             paddingTop: spacing.md,
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: colors.border,
-            gap: spacing.xs,
+            gap: spacing.md,
           }}>
-          <Text variant="caption" color="textSecondary">
-            Kâbe {Math.round(state.distanceKm).toLocaleString('tr-TR')} km uzakta
-          </Text>
-          <Text variant="caption" color="textMuted">
-            Yön gerçek kuzeye göredir, manyetik sapma düzeltilmiştir.
-          </Text>
+          {/*
+            Titreşim anahtarı ekranın kendi içinde: bu özelliği arayan
+            kullanıcı Ayarlar'ı gezmiyor, kıbleyi ararken burada oluyor.
+          */}
+          <Button
+            variant={hapticsEnabled ? 'secondary' : 'quiet'}
+            icon={hapticsEnabled ? 'vibrate' : 'vibrate-off'}
+            label={
+              hapticsEnabled
+                ? 'Titreşimli yön bulma açık'
+                : 'Titreşimli yön bulma kapalı'
+            }
+            accessibilityLabel={
+              hapticsEnabled
+                ? 'Titreşimli yön bulma açık. Kapatmak için dokunun.'
+                : 'Titreşimli yön bulma kapalı. Açmak için dokunun. Açıkken telefonu çevirdikçe titreşim sıklaşır, kıbleye yaklaştığınızı bu şekilde anlarsınız.'
+            }
+            onPress={() =>
+              setStoredHaptics(hapticsEnabled ? 'false' : 'true')
+            }
+          />
+
+          <View style={{ gap: spacing.xs }}>
+            <Text variant="caption" color="textSecondary">
+              Kâbe {Math.round(state.distanceKm).toLocaleString('tr-TR')} km
+              uzakta
+            </Text>
+            <Text variant="caption" color="textMuted">
+              Yön gerçek kuzeye göredir, manyetik sapma düzeltilmiştir.
+            </Text>
+          </View>
         </View>
       ) : null}
     </Screen>

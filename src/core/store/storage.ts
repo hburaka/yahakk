@@ -44,6 +44,14 @@ export const StorageKeys = {
   /** Zincirli sette kaçıncı adımda kalındığı */
   zikirSetStep: 'tesbih.setStep',
   /**
+   * Kıblede titreşimle yön bulma açık mı.
+   *
+   * Varsayılan açık: bu ekrana zaten kıbleyi aramak için giriliyor,
+   * rehberlik istenen şeyin ta kendisi. Titreşim yalnızca bu ekran
+   * açıkken çalışıyor, arka planda değil.
+   */
+  qiblaHaptics: 'qibla.haptics',
+  /**
    * Varsayılan favoriler bir kez eklendi mi.
    *
    * Bayrak olmadan, tüm favorilerini silen kullanıcının karşısına

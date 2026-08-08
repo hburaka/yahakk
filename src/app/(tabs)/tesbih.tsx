@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { announce } from '@/core/a11y/screen-reader';
 import { Button, IconButton } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
@@ -435,6 +436,37 @@ export default function TesbihScreen() {
   const counter = useCounter(scope, selected.target, handleComplete);
   const notStarted = counter.count === 0;
 
+  /*
+    Ekran okuyucu duyuruları.
+
+    Sayaç etiketi sabit tutulduğu için (yukarıdaki gerekçeye bakın)
+    görme engelli kullanıcı sayıyı duymuyor. Onun yerine yalnızca
+    anlamlı anlar duyuruluyor: her kilometre taşı ve hedefe ulaşma.
+    Bunlar gören kullanıcıya renk değişimi ve titreşimle bildiriliyordu,
+    görmeyen kullanıcıya hiçbir şeyle bildirilmiyordu.
+
+    Sayı her dokunuşta duyurulsaydı, ekran okuyucu zikrin ritmini
+    bozardı — ki düzeltmeye çalıştığımız sorun tam da buydu.
+  */
+  const milestone = counter.justHitMilestone;
+  useEffect(() => {
+    if (milestone) announce(`${counter.count}`);
+    // Sayıyı bağımlılığa koymuyoruz: duyuruyu tetikleyen kilometre taşı
+    // bayrağı, sayının kendisi değil.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [milestone]);
+
+  const isComplete = counter.isComplete;
+  useEffect(() => {
+    if (!isComplete) return;
+    announce(
+      isSet
+        ? `Tamamlandı. ${selected.stepIndex + 1}. adım bitti.`
+        : 'Hedefe ulaştınız.'
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isComplete]);
+
   const { appearance } = useTesbihAppearance();
   const [tap, setTap] = useState<TapPoint | null>(null);
   const counterStyle = useCounterMotion(tap, appearance.tapEffect);
@@ -485,8 +517,20 @@ export default function TesbihScreen() {
         }}
         disabled={advancing}
         accessibilityRole="button"
-        accessibilityLabel={`Say. ${counter.count} / ${selected.target}`}
-        accessibilityHint="Zikri bir artırmak için ekrana dokunun"
+        /*
+          Etiket SABİT. İçinde sayı yok ve bu bilinçli.
+
+          Önce "Say. 3 / 100" yazıyordu. TalkBack odaktaki öğenin etiketi
+          değişince onu yeniden okuyor; yani her zikirde telefon
+          konuşuyordu. Zikir çekerken sürekli konuşan bir ekran zikri
+          bölüyor ve sayma ritmini imkânsız kılıyor.
+
+          Sayının kendisi hemen aşağıda, kendi erişilebilirlik etiketiyle
+          duruyor: kullanıcı merak ettiğinde oraya kaydırıp dinliyor.
+          Kilometre taşları ve hedef ayrıca duyuruluyor.
+        */
+        accessibilityLabel="Zikir sayacı"
+        accessibilityHint="Bir artırmak için çift dokunun"
         style={{ flex: 1, overflow: 'hidden' }}>
         {POINT_EFFECTS.includes(appearance.tapEffect) ? (
           <TapPointEffect
@@ -542,7 +586,25 @@ export default function TesbihScreen() {
             </Text>
           </View>
 
-          <View style={{ alignItems: 'center', gap: spacing.xs }}>
+          {/*
+            Sayı bloğu tek bir erişilebilirlik öğesi. Ekran okuyucu
+            kullanıcısı buraya kaydırdığında "otuz üç bölü yüz, altmış
+            yedi kaldı" duyuyor — sayacın kendisi konuşmadığı için
+            durumu öğrenmenin yolu bu.
+          */}
+          <View
+            accessible
+            accessibilityRole="text"
+            accessibilityLabel={
+              counter.isLoading
+                ? 'Sayaç yükleniyor'
+                : `${counter.count} bölü ${selected.target}${
+                    counter.isComplete
+                      ? ', tamamlandı'
+                      : `, ${selected.target - counter.count} kaldı`
+                  }`
+            }
+            style={{ alignItems: 'center', gap: spacing.xs }}>
             {/* Kayıt yüklenirken 0 gösterilirse, yarım oturum gelince
                 sayı zıplıyor. Yer ayrılıp boş bırakılıyor. */}
             <Animated.View style={counterStyle}>
