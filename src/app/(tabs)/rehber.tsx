@@ -278,9 +278,13 @@ export default function RehberScreen() {
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: colors.border,
         }}>
+        {/* Not sekmeye göre değişiyor: ilmihal metinleri yazıldı ama
+            onaylanmadı, dua metinleri henüz hiç girilmedi. Tek bir genel
+            uyarı ikisini de yanlış anlatır ve zamanla okunmaz hale gelir. */}
         <Text variant="caption" color="textMuted">
-          İçerik metinleri henüz girilmedi. Dua ve ilmihal metinleri, ehil biri
-          tarafından gözden geçirilmeden uygulamaya eklenmeyecek.
+          {tab === 'dua'
+            ? 'Dua metinleri henüz girilmedi. Kaynak ve telif durumu netleşmeden uygulamaya eklenmeyecek.'
+            : 'İlmihal metinleri Diyanet İşleri Başkanlığı İlmihali esas alınarak hazırlandı, henüz ehil biri tarafından gözden geçirilmedi. Tereddüt ettiğiniz konuda müftülüğe danışın.'}
         </Text>
       </View>
     </Screen>

@@ -84,7 +84,10 @@ export const ILMIHAL_SECTIONS: readonly IlmihalSection[] = [
     id: 'oruc',
     title: 'Oruç',
     topics: [
-      { id: 'orucun-esaslari', title: 'Orucun Esasları', madhabSpecific: false },
+      // Mezhebe göre değişir: Şâfiî'de farz oruca geceden niyet etmek
+      // şart, Hanefî'de kuşluk vaktine kadar niyet edilebiliyor. Sahura
+      // kalkamayan biri için sonuç tamamen farklı.
+      { id: 'orucun-esaslari', title: 'Orucun Esasları', madhabSpecific: true },
       { id: 'orucu-bozanlar', title: 'Orucu Bozan Durumlar', madhabSpecific: true },
       { id: 'fidye-kefaret', title: 'Fidye ve Kefaret', madhabSpecific: true },
     ],
@@ -93,7 +96,9 @@ export const ILMIHAL_SECTIONS: readonly IlmihalSection[] = [
     id: 'zekat',
     title: 'Zekât',
     topics: [
-      { id: 'zekatin-esaslari', title: 'Zekâtın Esasları', madhabSpecific: false },
+      // Mezhebe göre değişir: Şâfiî'de çocuğun malından da zekât gerekir
+      // (velisi öder), Hanefî'de gerekmez. Ayrıca dağıtım kuralı farklı.
+      { id: 'zekatin-esaslari', title: 'Zekâtın Esasları', madhabSpecific: true },
       { id: 'nisab', title: 'Nisab ve Hesaplama', madhabSpecific: true },
       { id: 'fitre', title: 'Fitre', madhabSpecific: true },
     ],

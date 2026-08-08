@@ -8,7 +8,9 @@ import {
   NAMAZIN_KILINISI,
 } from './namaz';
 import { KAZA, SEFERILIK, SEHIV_SECDESI } from './namaz-durumlar';
+import { FIDYE_KEFARET, ORUCU_BOZANLAR, ORUCUN_ESASLARI } from './oruc';
 import { ABDEST_BOZAN, GUSUL, TEYEMMUM } from './temizlik';
+import { FITRE, NISAB, ZEKATIN_ESASLARI } from './zekat';
 
 /**
  * İlmihal konuları.
@@ -34,6 +36,12 @@ const TOPICS: readonly IlmihalTopicContent[] = [
   CENAZE,
   SEFERILIK,
   KAZA,
+  ORUCUN_ESASLARI,
+  ORUCU_BOZANLAR,
+  FIDYE_KEFARET,
+  ZEKATIN_ESASLARI,
+  NISAB,
+  FITRE,
 ];
 
 export const ILMIHAL_CONTENT: Record<string, IlmihalTopicContent> =
