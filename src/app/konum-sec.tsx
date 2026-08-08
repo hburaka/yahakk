@@ -14,6 +14,7 @@ import { db } from '@/core/db/client';
 import { locations, type Location as LocationRow } from '@/core/db/schema';
 import { storage, StorageKeys } from '@/core/store/storage';
 import { Screen, Text } from '@/core/ui/components';
+import { GroupLabel } from '@/core/ui/section';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
@@ -185,9 +186,7 @@ export default function KonumSecScreen() {
 
       {search.status === 'results' ? (
         <View style={{ marginTop: spacing.xl, gap: spacing.sm }}>
-          <Text variant="label" color="textMuted">
-            SONUÇLAR
-          </Text>
+          <GroupLabel>Sonuçlar</GroupLabel>
           {search.items.map((item) => (
             <Row
               key={item.id}
@@ -225,9 +224,7 @@ export default function KonumSecScreen() {
 
       {saved.length > 0 ? (
         <View style={{ marginTop: spacing.section, gap: spacing.sm }}>
-          <Text variant="label" color="textMuted">
-            KAYITLI KONUMLAR
-          </Text>
+          <GroupLabel>Kayitli konumlar</GroupLabel>
           {saved.map((row) => (
             <Row
               key={row.id}

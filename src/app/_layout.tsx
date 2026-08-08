@@ -226,6 +226,19 @@ function RootNavigator() {
             headerStyle: { backgroundColor: colors.background },
           }}
         />
+        {/*
+          Bu ekran Stack'e kayitli degildi; basligi rota adindan
+          uretiliyordu. Konu adi ekranin kendi icinde buyuk puntoyla
+          duruyor, o yuzden baslik cubugunda yalnizca nerede olundugu
+          yaziyor.
+        */}
+        <Stack.Screen
+          name="ilmihal/[id]"
+          options={{
+            title: 'İlmihal',
+            headerStyle: { backgroundColor: colors.background },
+          }}
+        />
         <Stack.Screen
           name="tesbih-gorunum"
           options={{

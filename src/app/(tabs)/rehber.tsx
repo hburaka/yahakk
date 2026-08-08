@@ -7,6 +7,7 @@ import { useMMKVString } from 'react-native-mmkv';
 import { storage, StorageKeys } from '@/core/store/storage';
 import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
+import { GroupLabel } from '@/core/ui/section';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
@@ -223,12 +224,7 @@ export default function RehberScreen() {
 
           {ILMIHAL_SECTIONS.map((section) => (
             <View key={section.id}>
-              <Text
-                variant="label"
-                color="textMuted"
-                style={{ marginBottom: spacing.sm }}>
-                {section.title.toLocaleUpperCase('tr-TR')}
-              </Text>
+              <GroupLabel>{section.title}</GroupLabel>
               {section.topics.map((topic, index) => {
                 const ready = hasContent(topic.id);
                 return (

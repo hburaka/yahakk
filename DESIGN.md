@@ -97,6 +97,26 @@ metin renklerinin nötr eksenden gelmesini şart koşuyor; vakit rengini
 zemin yapıp üstüne yazı koymak kontrast oranını gün içinde değiştirir ve
 AAA hedefi çöker. Vakit rengi seçili durumu göstermeye ayrılmıştır.
 
+### Başlık hiyerarşisi
+
+Üç seviye var, hepsi bilinçli. Bu tablo yazılmadan önce "grup etiketi"
+beş ekranda elle ve her birinde farklı boşlukla yazılmıştı; benzer
+şeyler benzer görünmüyor, farklı şeyler ayrışmıyordu.
+
+| Seviye | Token | Nerede |
+|---|---|---|
+| Ekran başlığı | `title` (30) | Yalnızca kendi başlığını taşıyan sekmeler. Modal ekranlarda başlık gezinme çubuğundadır, ekranda tekrar edilmez. |
+| Bölüm başlığı | `Section` → `heading` (22) | Kontrol taşıyan ayar grupları. Altında açıklama cümlesi olur, kullanıcı burada karar verir. |
+| Grup etiketi | `GroupLabel` → `label` (13, versal) | Okuma ve rapor bağlamında veri öbeği adlandırır. Karar değil, yön gösterir. |
+
+Vakitler, Kıble ve Tesbih ekranlarında **başlık yoktur**: o ekranlarda
+aracın kendisi içeriktir ve bir başlık cevapla yer için yarışır
+(bkz. ilke 1). Sekme çubuğu zaten nerede olunduğunu söylüyor.
+
+Türkçe büyük harfe çevirme `toLocaleUpperCase('tr-TR')` ile yapılır;
+aksi halde "i" harfi "I" oluyor, "İ" değil. `GroupLabel` bunu kendi
+içinde hallediyor, çağıran yer düz metin verir.
+
 ### Sabit yükseklik yasağı
 
 Layout bölümündeki "hiçbir metin sabit yükseklikli kaba konmaz" kuralı

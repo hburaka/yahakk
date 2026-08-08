@@ -9,7 +9,7 @@ import Animated, {
 
 import { Screen, Text } from '@/core/ui/components';
 import { ChoiceChips } from '@/core/ui/options';
-import { Section } from '@/core/ui/section';
+import { GroupLabel, Section } from '@/core/ui/section';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import {
@@ -61,12 +61,9 @@ export default function TesbihGorunumScreen() {
     <Screen scroll edges={{ top: false }}>
       {/* Ayarları okuyarak değil, dokunarak seçmek gerekiyor —
           "su damlası" ile "nabız" arasındaki fark ancak hissedilir. */}
-      <Text
-        variant="label"
-        color="textMuted"
-        style={{ marginTop: spacing.lg, marginBottom: spacing.sm }}>
-        DENEMEK İÇİN DOKUNUN
-      </Text>
+      <View style={{ marginTop: spacing.lg }}>
+        <GroupLabel>Denemek için dokunun</GroupLabel>
+      </View>
 
       <Pressable
         onPress={(event) => {

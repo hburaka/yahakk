@@ -15,6 +15,37 @@ import { useTheme } from '@/core/ui/theme-context';
  * Üç ayar ekranı bu bileşeni paylaşıyor; ayrı ayrı kopyalanmış üç
  * sürüm zamanla ayrışıyordu.
  */
+/**
+ * Grup etiketi — bölüm başlığının küçük kardeşi.
+ *
+ * İki ayrı başlık seviyesi var ve ikisi de bilinçli:
+ *
+ * - `Section` (heading, 22pt): kontrol taşıyan ayar grupları. Altında
+ *   açıklama cümlesi olabilir, kullanıcı burada bir karar verir.
+ * - `GroupLabel` (label, 13pt, versal): okuma ve rapor bağlamında veri
+ *   öbeklerini adlandırır. Karar değil, yön gösterir.
+ *
+ * Ortak bileşene alınmasının sebebi: aynı etiket beş ekranda elle
+ * yazılmıştı, her birinde farklı boşluk ve farklı renkle. Sonuçta
+ * benzer şeyler benzer görünmüyor, farklı şeyler ayrışmıyordu.
+ *
+ * Metin olduğu gibi yazılır; büyük harfe çevirmeyi bileşen yapar
+ * (Türkçe'de `toLocaleUpperCase('tr-TR')` şart: "i" harfi aksi halde
+ * "I" oluyor, "İ" değil).
+ */
+export function GroupLabel({ children }: { children: string }) {
+  const { spacing } = useTheme();
+
+  return (
+    <Text
+      variant="label"
+      color="textMuted"
+      style={{ marginBottom: spacing.sm }}>
+      {children.toLocaleUpperCase('tr-TR')}
+    </Text>
+  );
+}
+
 export function Section({
   title,
   description,

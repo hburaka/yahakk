@@ -4,6 +4,7 @@ import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
+import { GroupLabel } from '@/core/ui/section';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import {
@@ -16,18 +17,6 @@ import {
 const CHART_HEIGHT = 96;
 
 const tr = (value: number) => value.toLocaleString('tr-TR');
-
-function SectionLabel({ children }: { children: string }) {
-  const { spacing } = useTheme();
-  return (
-    <Text
-      variant="label"
-      color="textMuted"
-      style={{ marginBottom: spacing.sm }}>
-      {children}
-    </Text>
-  );
-}
 
 function Divider() {
   const { colors, spacing } = useTheme();
@@ -241,7 +230,7 @@ export default function TesbihRaporScreen() {
   return (
     <Screen scroll edges={{ top: false }}>
       <View style={{ marginTop: spacing.lg }}>
-        <SectionLabel>BUGÜN</SectionLabel>
+        <GroupLabel>Bugün</GroupLabel>
         <Text variant="countdown">{tr(stats.today)}</Text>
         <Text variant="body" color="textSecondary">
           çekilen zikir
@@ -259,14 +248,14 @@ export default function TesbihRaporScreen() {
       <Divider />
 
       <View>
-        <SectionLabel>SON 30 GÜN</SectionLabel>
+        <GroupLabel>Son 30 gün</GroupLabel>
         <DailyChart daily={stats.daily} />
       </View>
 
       <Divider />
 
       <View>
-        <SectionLabel>ZİKİR DAĞILIMI</SectionLabel>
+        <GroupLabel>Zikir dağılımı</GroupLabel>
         {stats.breakdown.map((row) => (
           <BreakdownRow key={row.templateId} row={row} max={breakdownMax} />
         ))}
