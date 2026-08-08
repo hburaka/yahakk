@@ -8,8 +8,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Screen, Text } from '@/core/ui/components';
+import { ChoiceChips } from '@/core/ui/options';
 import { Section } from '@/core/ui/section';
-import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import {
@@ -30,50 +30,6 @@ import {
 
 const PREVIEW_HEIGHT = 190;
 
-
-function Chips<T extends string>({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: { value: T; label: string }[];
-  selected: T;
-  onSelect: (value: T) => void;
-}) {
-  const { colors, spacing, radii } = useTheme();
-  const period = usePeriodPalette();
-
-  return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-      {options.map((option) => {
-        const isSelected = option.value === selected;
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => onSelect(option.value)}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: isSelected }}
-            accessibilityLabel={option.label}
-            style={{
-              minHeight: MIN_TOUCH_TARGET,
-              justifyContent: 'center',
-              paddingHorizontal: spacing.lg,
-              borderRadius: radii.pill,
-              backgroundColor: isSelected ? period.accentSoft : 'transparent',
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: isSelected ? period.accent : colors.border,
-            }}>
-            <Text
-              variant="bodyStrong"
-              color={isSelected ? 'text' : 'textSecondary'}>
-              {option.label}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
 
 export default function TesbihGorunumScreen() {
   const { colors, spacing, radii } = useTheme();
@@ -172,7 +128,7 @@ export default function TesbihGorunumScreen() {
         first
         title="Dokunuş efekti"
         description={TAP_EFFECT_HINTS[appearance.tapEffect]}>
-        <Chips<TapEffect>
+        <ChoiceChips<TapEffect>
           options={(Object.keys(TAP_EFFECT_LABELS) as TapEffect[]).map(
             (value) => ({ value, label: TAP_EFFECT_LABELS[value] })
           )}
@@ -186,7 +142,7 @@ export default function TesbihGorunumScreen() {
           <Section
             title="Renk"
             description="Vakit rengi, günün hangi vaktinde olduğunuza göre kendiliğinden değişir.">
-            <Chips<EffectColor>
+            <ChoiceChips<EffectColor>
               options={(Object.keys(EFFECT_COLOR_LABELS) as EffectColor[]).map(
                 (value) => ({ value, label: EFFECT_COLOR_LABELS[value] })
               )}
@@ -196,7 +152,7 @@ export default function TesbihGorunumScreen() {
           </Section>
 
           <Section title="Boyut">
-            <Chips<EffectSize>
+            <ChoiceChips<EffectSize>
               options={(Object.keys(EFFECT_SIZE_LABELS) as EffectSize[]).map(
                 (value) => ({ value, label: EFFECT_SIZE_LABELS[value] })
               )}
@@ -210,7 +166,7 @@ export default function TesbihGorunumScreen() {
       <Section
         title="Titreşim"
         description="Yalnızca normal dokunuşu etkiler. Her 100'de gelen ve hedefe ulaşınca gelen titreşimler her zaman belirgin kalır — onlar geri bildirim değil, bilgi.">
-        <Chips<HapticStrength>
+        <ChoiceChips<HapticStrength>
           options={(Object.keys(HAPTIC_LABELS) as HapticStrength[]).map(
             (value) => ({ value, label: HAPTIC_LABELS[value] })
           )}

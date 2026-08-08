@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useKeepAwake } from 'expo-keep-awake';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
@@ -41,48 +42,6 @@ const QUICK_TEMPLATE_IDS = [
   'salavat-kisa',
   'subhanallahi-ve-bihamdihi',
 ];
-
-function ControlButton({
-  icon,
-  label,
-  onPress,
-  disabled,
-}: {
-  icon: 'undo-variant' | 'refresh';
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-}) {
-  const { colors, spacing, radii } = useTheme();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityState={{ disabled: !!disabled }}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.sm,
-        minHeight: MIN_TOUCH_TARGET,
-        paddingHorizontal: spacing.lg,
-        borderRadius: radii.pill,
-        opacity: disabled ? 0.35 : 1,
-        backgroundColor: pressed ? colors.surfaceAlt : 'transparent',
-      })}>
-      <MaterialCommunityIcons
-        name={icon}
-        size={20}
-        color={colors.textSecondary}
-      />
-      <Text variant="bodyStrong" color="textSecondary">
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 type TapPoint = { x: number; y: number; id: number };
 
@@ -219,10 +178,18 @@ function QuickSwitcher({
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      // Yatay ScrollView dikey bir flex kabın içinde varsayılan olarak
-      // esneyip boşta kalan yüksekliği kaplıyor; ekran ikiye bölünmüş
-      // gibi görünmesinin sebebi buydu. Yükseklik sabitleniyor.
-      style={{ flexGrow: 0, flexShrink: 0, height: QUICK_ROW_HEIGHT }}
+      /*
+        Yatay ScrollView dikey bir flex kabın içinde varsayılan olarak
+        esneyip boşta kalan yüksekliği kaplıyor; ekranın ikiye bölünmüş
+        görünmesinin sebebi buydu. `flexGrow: 0` + `flexShrink: 0` bunu
+        engellemeye yetiyor.
+
+        Burada önce `height: 52` de vardı; o sabit yükseklik çipin ikinci
+        satırını kırpıyordu. Sabit değer yerine alt sınır veriliyor:
+        şerit kısa adlarda aynı yükseklikte duruyor, uzun adlarda
+        büyüyebiliyor.
+      */
+      style={{ flexGrow: 0, flexShrink: 0, minHeight: QUICK_ROW_HEIGHT }}
       contentContainerStyle={{
         alignItems: 'center',
         gap: spacing.sm,
@@ -239,7 +206,14 @@ function QuickSwitcher({
             flexDirection: 'row',
             alignItems: 'center',
             gap: spacing.xs,
-            height: 40,
+            // Sabit yükseklik değil. `height: 40` iken uzun zikir adları
+            // ikinci satıra kayıp o satır kırpılıyordu: "Sübhânallâhi ve
+            // bihamdihî" ekranda "Sübhânallâhi ve" olarak görünüyor,
+            // üstelik üç nokta da çıkmadığı için kullanıcı metnin eksik
+            // olduğunu anlayamıyordu. Sistem yazı boyutu büyütüldüğünde
+            // aynı sorun kısa adlarda da çıkıyordu.
+            minHeight: 40,
+            paddingVertical: spacing.xs,
             paddingHorizontal: spacing.lg,
             borderRadius: radii.pill,
             backgroundColor: item.isSelected
@@ -323,6 +297,7 @@ export default function TesbihScreen() {
 
   const { colors, spacing } = useTheme();
   const period = usePeriodPalette();
+  const router = useRouter();
   const selected = useZikirSelection();
   const favorites = useZikirFavorites();
   const template = selected.template;
@@ -397,7 +372,9 @@ export default function TesbihScreen() {
           gap: spacing.md,
         }}>
         <View style={{ flex: 1 }}>
-          <Text variant="bodyStrong" numberOfLines={1}>
+          {/* Tek satırda "Sübhânallâhi v..." gibi kesiliyordu. Zikrin adı
+              başlığın kendisi; kısaltılacak yer burası değil. */}
+          <Text variant="bodyStrong" numberOfLines={2}>
             {isSet && selected.set ? selected.set.name : template.name}
           </Text>
           <Text variant="caption" color="textSecondary">
@@ -425,28 +402,15 @@ export default function TesbihScreen() {
           </Pressable>
         </Link>
 
-        <Link href="/zikir-sec" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Zikir değiştir"
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.xs,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingHorizontal: spacing.sm,
-              opacity: pressed ? 0.6 : 1,
-            })}>
-            <Text variant="body" color="textSecondary">
-              Değiştir
-            </Text>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={20}
-              color={colors.textMuted}
-            />
-          </Pressable>
-        </Link>
+        {/* Önce çerçevesiz, şeffaf ve soluk renkli düz metindi; ekrandaki
+            zikir adından ve açıklamalardan ayırt edilemiyordu. Artık
+            uygulamanın ortak buton dilini kullanıyor. */}
+        <Button
+          label="Değiştir"
+          trailingIcon="chevron-right"
+          onPress={() => router.push('/zikir-sec')}
+          accessibilityLabel="Zikir değiştir"
+        />
       </View>
 
       <QuickSwitcher selection={selected} favoriteIds={favorites.ids} />
@@ -482,7 +446,15 @@ export default function TesbihScreen() {
             paddingHorizontal: spacing.xl,
             gap: spacing.lg,
           }}>
-          <View style={{ alignItems: 'center', gap: spacing.xs }}>
+          {/*
+            `alignSelf: 'stretch'` şart. Kap `alignItems: 'center'`
+            altında kaldığında genişliği en geniş çocuğuna, yani Arapça
+            metne kilitleniyordu; okunuş ondan uzun olduğunda ikinci
+            satıra kayıyor ve "Sübhânallâhi ve bihamdihî" ekranda
+            "Sübhânallâhi ve" olarak görünüyordu. Şerit artık kullanılabilir
+            genişliğin tamamını alıyor, metin kendi doğal yerinde sarıyor.
+          */}
+          <View style={{ alignSelf: 'stretch', gap: spacing.xs }}>
             <Text variant="arabic" style={{ textAlign: 'center' }}>
               {template.arabic}
             </Text>
@@ -610,13 +582,18 @@ export default function TesbihScreen() {
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: colors.border,
         }}>
-        <ControlButton
+        {/* Sessiz seviye: sayaç ekranın asıl eylemi, bunlar yardımcı.
+            Yine de arka planları var — şeffaf bırakıldıklarında ekrandaki
+            açıklama yazılarından ayırt edilemiyorlardı. */}
+        <Button
+          variant="quiet"
           icon="undo-variant"
           label="Geri al"
           onPress={counter.undo}
           disabled={counter.count === 0}
         />
-        <ControlButton
+        <Button
+          variant="quiet"
           icon="refresh"
           label="Sıfırla"
           onPress={counter.reset}

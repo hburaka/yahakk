@@ -1,7 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Linking, Pressable, StyleSheet, Switch, View } from 'react-native';
+import { Linking, StyleSheet, Switch, View } from 'react-native';
 
+import { Button } from '@/core/ui/button';
 import { Screen, Text } from '@/core/ui/components';
+import { OptionGroup } from '@/core/ui/options';
 import { Section } from '@/core/ui/section';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
@@ -33,81 +35,8 @@ import {
   PRAYER_ORDER,
   type PrayerKey,
 } from '@/features/prayer-times/types';
-import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import { usePrayerSettings } from '@/features/prayer-times/use-prayer-settings';
 
-
-function Radio<T extends string>({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: { value: T; label: string; hint?: string }[];
-  selected: T;
-  onSelect: (value: T) => void;
-}) {
-  const { colors, spacing, radii } = useTheme();
-  const period = usePeriodPalette();
-
-  return (
-    <View style={{ gap: spacing.xs }}>
-      {options.map((option) => {
-        const isSelected = option.value === selected;
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => onSelect(option.value)}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: isSelected }}
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.md,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingVertical: spacing.sm,
-              paddingHorizontal: spacing.md,
-              borderRadius: radii.md,
-              backgroundColor: isSelected
-                ? period.accentSoft
-                : pressed
-                  ? colors.surfaceAlt
-                  : 'transparent',
-            })}>
-            <View
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: 11,
-                borderWidth: 2,
-                borderColor: isSelected ? period.accent : colors.borderStrong,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {isSelected ? (
-                <View
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
-                    backgroundColor: period.accent,
-                  }}
-                />
-              ) : null}
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text variant="bodyStrong">{option.label}</Text>
-              {option.hint ? (
-                <Text variant="caption" color="textSecondary">
-                  {option.hint}
-                </Text>
-              ) : null}
-            </View>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
 
 function BatteryWarning() {
   const { colors, spacing, radii } = useTheme();
@@ -148,23 +77,14 @@ function BatteryWarning() {
           </Text>
         ))}
       </View>
-      <Pressable
-        onPress={() => Linking.openSettings()}
-        accessibilityRole="button"
-        accessibilityLabel="Uygulama ayarlarını aç"
-        style={({ pressed }) => ({
-          marginTop: spacing.xs,
-          alignSelf: 'flex-start',
-          minHeight: MIN_TOUCH_TARGET,
-          justifyContent: 'center',
-          paddingHorizontal: spacing.lg,
-          borderRadius: radii.pill,
-          borderWidth: StyleSheet.hairlineWidth,
-          borderColor: colors.borderStrong,
-          backgroundColor: pressed ? colors.surfaceAlt : 'transparent',
-        })}>
-        <Text variant="bodyStrong">Ayarları aç</Text>
-      </Pressable>
+      <View style={{ marginTop: spacing.xs }}>
+        <Button
+          label="Ayarları aç"
+          icon="cog-outline"
+          onPress={() => Linking.openSettings()}
+          accessibilityLabel="Uygulama ayarlarını aç"
+        />
+      </View>
     </View>
   );
 }
@@ -182,7 +102,7 @@ export default function VakitAyarlariScreen() {
         first
         title="İkindi vakti"
         description="Diyanet asr-ı evveli yayınlar; Türkiye'deki camiler buna göre ezan okur. Hanefî ikindiyi seçerseniz diğer beş vakit değişmez, yalnızca ikindi yeniden hesaplanır.">
-        <Radio<AsrMethod>
+        <OptionGroup<AsrMethod>
           options={[
             {
               value: 'evvel',
@@ -223,7 +143,7 @@ export default function VakitAyarlariScreen() {
 
         <View style={{ gap: spacing.sm }}>
           <Text variant="bodyStrong">Sahur — imsaktan çıkarılır</Text>
-          <Radio<string>
+          <OptionGroup<string>
             options={MARGIN_OPTIONS.map((minutes) => ({
               value: String(minutes),
               label: marginLabel(minutes),
@@ -241,7 +161,7 @@ export default function VakitAyarlariScreen() {
 
         <View style={{ gap: spacing.sm }}>
           <Text variant="bodyStrong">İftar — akşama eklenir</Text>
-          <Radio<string>
+          <OptionGroup<string>
             options={MARGIN_OPTIONS.map((minutes) => ({
               value: String(minutes),
               label: marginLabel(minutes),
@@ -327,7 +247,7 @@ export default function VakitAyarlariScreen() {
       <Section
         title="Bildirim sesi"
         description="Ezan kaydı henüz eklenmedi — telifi net olmayan bir kayıt uygulamaya konmayacak. Şimdilik telefonunuzun bildirim sesi kullanılıyor.">
-        <Radio<NotificationSound>
+        <OptionGroup<NotificationSound>
           options={(
             Object.keys(NOTIFICATION_SOUNDS) as NotificationSound[]
           ).map((value) => ({
@@ -341,7 +261,7 @@ export default function VakitAyarlariScreen() {
       </Section>
 
       <Section title="Hatırlatma zamanı">
-        <Radio<string>
+        <OptionGroup<string>
           options={REMINDER_OPTIONS.map((minutes) => ({
             value: String(minutes),
             label: reminderLabel(minutes),
@@ -400,7 +320,7 @@ export default function VakitAyarlariScreen() {
       <Section
         title="Hesaplama yöntemi"
         description="Diyanet vakitleri bulunamadığında veya yurt dışındayken kullanılır.">
-        <Radio<CalculationMethodKey>
+        <OptionGroup<CalculationMethodKey>
           options={(
             Object.keys(CALCULATION_METHOD_LABELS) as CalculationMethodKey[]
           ).map((value) => ({ value, label: CALCULATION_METHOD_LABELS[value] }))}
@@ -412,7 +332,7 @@ export default function VakitAyarlariScreen() {
       <Section
         title="Yüksek enlem kuralı"
         description="Kuzey Avrupa'da yazın güneş yeterince batmadığı için imsak ve yatsı uçuk saatlere kayabilir. Türkiye'de bu ayarın etkisi yoktur.">
-        <Radio<HighLatitudeRuleKey>
+        <OptionGroup<HighLatitudeRuleKey>
           options={(
             Object.keys(HIGH_LATITUDE_RULE_LABELS) as HighLatitudeRuleKey[]
           ).map((value) => ({

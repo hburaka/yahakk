@@ -1,11 +1,11 @@
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Screen, Text } from '@/core/ui/components';
+import { ChoiceChips } from '@/core/ui/options';
 import { Section } from '@/core/ui/section';
 import {
   ARABIC_FONTS,
   arabicScales,
-  MIN_TOUCH_TARGET,
   READING_FONTS,
   readingScales,
   SCALE_LABELS,
@@ -17,42 +17,6 @@ import {
 } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
-
-function Chip({
-  label,
-  isSelected,
-  onPress,
-  accessibilityLabel,
-}: {
-  label: string;
-  isSelected: boolean;
-  onPress: () => void;
-  accessibilityLabel: string;
-}) {
-  const { colors, spacing, radii } = useTheme();
-  const period = usePeriodPalette();
-
-  return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="radio"
-      accessibilityState={{ selected: isSelected }}
-      accessibilityLabel={accessibilityLabel}
-      style={{
-        minHeight: MIN_TOUCH_TARGET,
-        justifyContent: 'center',
-        paddingHorizontal: spacing.lg,
-        borderRadius: radii.pill,
-        backgroundColor: isSelected ? period.accentSoft : 'transparent',
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: isSelected ? period.accent : colors.border,
-      }}>
-      <Text variant="bodyStrong" color={isSelected ? 'text' : 'textSecondary'}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
 function FontOption({
   choice,
@@ -76,14 +40,21 @@ function FontOption({
       accessibilityRole="radio"
       accessibilityState={{ selected: isSelected }}
       accessibilityLabel={`${choice.label}. ${choice.hint}`}
-      style={{
+      /* Seçilmemiş kart da yüzey rengini taşır. Şeffaf bırakıldığında
+         dokunulabilir olduğu belli olmuyordu; ekranın geri kalanıyla
+         aynı zemine oturup düz metin gibi görünüyordu. */
+      style={({ pressed }) => ({
         gap: spacing.xs,
         padding: spacing.md,
         borderRadius: radii.md,
-        backgroundColor: isSelected ? period.accentSoft : 'transparent',
         borderWidth: StyleSheet.hairlineWidth,
         borderColor: isSelected ? period.accent : colors.border,
-      }}>
+        backgroundColor: isSelected
+          ? period.accentSoft
+          : pressed
+            ? colors.surfaceAlt
+            : colors.surface,
+      })}>
       <View
         style={{
           flexDirection: 'row',
@@ -155,17 +126,14 @@ export default function OkumaAyarlariScreen() {
           first
           title="Türkçe metin boyutu"
           description="Okunuş, meal ve ilmihal metinlerine uygulanır. Arayüzü etkilemez.">
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-            {(Object.keys(readingScales) as ReadingScale[]).map((scale) => (
-              <Chip
-                key={scale}
-                label={SCALE_LABELS[scale]}
-                isSelected={theme.readingScale === scale}
-                onPress={() => theme.setReadingScale(scale)}
-                accessibilityLabel={`Türkçe metin boyutu ${SCALE_LABELS[scale]}`}
-              />
-            ))}
-          </View>
+          <ChoiceChips<ReadingScale>
+            options={(Object.keys(readingScales) as ReadingScale[]).map(
+              (scale) => ({ value: scale, label: SCALE_LABELS[scale] })
+            )}
+            selected={theme.readingScale}
+            onSelect={theme.setReadingScale}
+            labelFor={(option) => `Türkçe metin boyutu ${option.label}`}
+          />
         </Section>
 
         <Section title="Türkçe yazı tipi">
@@ -186,17 +154,14 @@ export default function OkumaAyarlariScreen() {
         <Section
           title="Arapça metin boyutu"
           description="Türkçe boyutundan bağımsızdır. Arapça harekeleriyle geldiği için aynı puntoda daha küçük okunur.">
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-            {(Object.keys(arabicScales) as ArabicScale[]).map((scale) => (
-              <Chip
-                key={scale}
-                label={SCALE_LABELS[scale]}
-                isSelected={theme.arabicScale === scale}
-                onPress={() => theme.setArabicScale(scale)}
-                accessibilityLabel={`Arapça metin boyutu ${SCALE_LABELS[scale]}`}
-              />
-            ))}
-          </View>
+          <ChoiceChips<ArabicScale>
+            options={(Object.keys(arabicScales) as ArabicScale[]).map(
+              (scale) => ({ value: scale, label: SCALE_LABELS[scale] })
+            )}
+            selected={theme.arabicScale}
+            onSelect={theme.setArabicScale}
+            labelFor={(option) => `Arapça metin boyutu ${option.label}`}
+          />
         </Section>
 
         <Section title="Arapça yazı tipi">

@@ -1,10 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
@@ -21,6 +20,7 @@ import {
 
 import { storage, StorageKeys } from '@/core/store/storage';
 import { Screen, Text } from '@/core/ui/components';
+import { OptionCard, OptionGroup, type Option } from '@/core/ui/options';
 import { Section } from '@/core/ui/section';
 import {
   ARABIC_FONTS,
@@ -30,92 +30,7 @@ import {
 } from '@/core/ui/theme';
 import { useTheme, type ThemePreference } from '@/core/ui/theme-context';
 import { ASR_METHOD_LABELS } from '@/features/prayer-times/calculate';
-import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
 import { usePrayerSettings } from '@/features/prayer-times/use-prayer-settings';
-
-type Option<T extends string> = { value: T; label: string; hint?: string };
-
-function OptionGroup<T extends string>({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: readonly Option<T>[];
-  selected: T;
-  onSelect: (value: T) => void;
-}) {
-  const { colors, spacing, radii } = useTheme();
-  const period = usePeriodPalette();
-
-  return (
-    <View style={{ gap: spacing.xs }}>
-      {options.map((option) => {
-        const isSelected = option.value === selected;
-        return (
-          <Pressable
-            key={option.value}
-            onPress={() => onSelect(option.value)}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: isSelected }}
-            /*
-              Seçenekler çerçeveli kart olarak duruyor. Önce çerçevesiz ve
-              şeffaf arka planlıydılar; ekranda düz yazı gibi görünüp
-              dokunulabilir olduklarını belli etmiyorlardı. Aynı ekrandaki
-              "Yedeği dışa aktar" gibi satırlar çerçeveliyken bunların
-              olmaması, ayarların yarısını okunamaz hale getiriyordu.
-            */
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.md,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingVertical: spacing.sm,
-              paddingHorizontal: spacing.md,
-              borderRadius: radii.md,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: isSelected ? period.accent : colors.border,
-              backgroundColor: isSelected
-                ? period.accentSoft
-                : pressed
-                  ? colors.surfaceAlt
-                  : colors.surface,
-            })}>
-            <View
-              style={{
-                width: 22,
-                height: 22,
-                borderRadius: 11,
-                borderWidth: 2,
-                borderColor: isSelected ? period.accent : colors.borderStrong,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              {isSelected ? (
-                <View
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
-                    backgroundColor: period.accent,
-                  }}
-                />
-              ) : null}
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text variant="bodyStrong">{option.label}</Text>
-              {option.hint ? (
-                <Text variant="caption" color="textSecondary">
-                  {option.hint}
-                </Text>
-              ) : null}
-            </View>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
-
 
 const THEME_OPTIONS: readonly Option<ThemePreference>[] = [
   { value: 'system', label: 'Sistem', hint: 'Cihaz ayarını takip eder' },
@@ -145,28 +60,13 @@ function DataRow({
   onPress: () => void;
   busy: boolean;
 }) {
-  const { colors, spacing, radii } = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <Pressable
+    <OptionCard
       onPress={onPress}
       disabled={busy}
-      accessibilityRole="button"
-      accessibilityLabel={title}
-      accessibilityState={{ busy }}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.md,
-        minHeight: MIN_TOUCH_TARGET,
-        paddingVertical: spacing.sm,
-        paddingHorizontal: spacing.md,
-        borderRadius: radii.md,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: colors.border,
-        backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-        opacity: busy ? 0.5 : 1,
-      })}>
+      accessibilityLabel={`${title}. ${subtitle}`}>
       <MaterialCommunityIcons
         name={icon}
         size={22}
@@ -179,7 +79,51 @@ function DataRow({
         </Text>
       </View>
       {busy ? <ActivityIndicator color={colors.textSecondary} /> : null}
-    </Pressable>
+    </OptionCard>
+  );
+}
+
+/**
+ * Alt ekrana götüren satır. Eylem satırlarıyla (DataRow) aynı kabı
+ * kullanıyor; ikisinin farklı görünmesi için bir sebep yok, ikisi de
+ * "dokun, bir şey olsun" vaat ediyor.
+ */
+function NavRow({
+  icon,
+  title,
+  subtitle,
+  href,
+}: {
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  title: string;
+  subtitle: string;
+  href: '/okuma-ayarlari' | '/vakit-ayarlari' | '/tesbih-gorunum';
+}) {
+  const { colors } = useTheme();
+  const router = useRouter();
+
+  return (
+    <OptionCard
+      onPress={() => router.push(href)}
+      accessibilityRole="link"
+      accessibilityLabel={`${title}. ${subtitle}`}>
+      <MaterialCommunityIcons
+        name={icon}
+        size={22}
+        color={colors.textSecondary}
+      />
+      <View style={{ flex: 1 }}>
+        <Text variant="bodyStrong">{title}</Text>
+        <Text variant="caption" color="textSecondary">
+          {subtitle}
+        </Text>
+      </View>
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={22}
+        color={colors.textMuted}
+      />
+    </OptionCard>
   );
 }
 
@@ -315,41 +259,12 @@ export default function AyarlarScreen() {
       <Section
         title="Okuma"
         description="Yazı boyutu ve yazı tipi. Türkçe ve Arapça ayrı ayrı ayarlanır.">
-        <Link href="/okuma-ayarlari" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Okuma ayarlarını aç"
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.md,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingHorizontal: spacing.md,
-              borderRadius: radii.md,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: colors.border,
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-            })}>
-            <MaterialCommunityIcons
-              name="format-size"
-              size={22}
-              color={colors.textSecondary}
-            />
-            <View style={{ flex: 1 }}>
-              <Text variant="bodyStrong">Okuma ayarları</Text>
-              <Text variant="caption" color="textSecondary">
-                {READING_FONTS[readingFont].label} ·{' '}
-                {SCALE_LABELS[readingScale]} · Arapça{' '}
-                {ARABIC_FONTS[arabicFont].label}
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={22}
-              color={colors.textMuted}
-            />
-          </Pressable>
-        </Link>
+        <NavRow
+          icon="format-size"
+          title="Okuma ayarları"
+          subtitle={`${READING_FONTS[readingFont].label} · ${SCALE_LABELS[readingScale]} · Arapça ${ARABIC_FONTS[arabicFont].label}`}
+          href="/okuma-ayarlari"
+        />
       </Section>
 
       <Section
@@ -365,39 +280,12 @@ export default function AyarlarScreen() {
       <Section
         title="Vakit ve bildirimler"
         description="İkindi tercihi, hangi vakitlerde bildirim geleceği ve hesaplama yöntemi.">
-        <Link href="/vakit-ayarlari" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Vakit ve bildirim ayarlarını aç"
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.md,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingHorizontal: spacing.md,
-              borderRadius: radii.md,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: colors.border,
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-            })}>
-            <MaterialCommunityIcons
-              name="bell-outline"
-              size={22}
-              color={colors.textSecondary}
-            />
-            <View style={{ flex: 1 }}>
-              <Text variant="bodyStrong">Vakit ve bildirimler</Text>
-              <Text variant="caption" color="textSecondary">
-                {ASR_METHOD_LABELS[asrMethod]}
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={22}
-              color={colors.textMuted}
-            />
-          </Pressable>
-        </Link>
+        <NavRow
+          icon="bell-outline"
+          title="Vakit ve bildirimler"
+          subtitle={ASR_METHOD_LABELS[asrMethod]}
+          href="/vakit-ayarlari"
+        />
       </Section>
 
       <Section
@@ -452,40 +340,12 @@ export default function AyarlarScreen() {
       <Section
         title="Tesbih"
         description="Dokunuş efekti, rengi ve titreşim yoğunluğu.">
-        <Link href="/tesbih-gorunum" asChild>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Tesbih görünüm ayarlarını aç"
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: spacing.md,
-              minHeight: MIN_TOUCH_TARGET,
-              paddingHorizontal: spacing.md,
-              borderRadius: radii.md,
-              borderWidth: StyleSheet.hairlineWidth,
-              borderColor: colors.border,
-              backgroundColor: pressed ? colors.surfaceAlt : colors.surface,
-            })}>
-            <MaterialCommunityIcons
-              name="water-outline"
-              size={22}
-              color={colors.textSecondary}
-            />
-            <View style={{ flex: 1 }}>
-              <Text variant="bodyStrong">Tesbih görünümü</Text>
-              <Text variant="caption" color="textSecondary">
-                {TAP_EFFECT_LABELS[appearance.tapEffect]} ·{' '}
-                {HAPTIC_LABELS[appearance.hapticStrength]} titreşim
-              </Text>
-            </View>
-            <MaterialCommunityIcons
-              name="chevron-right"
-              size={22}
-              color={colors.textMuted}
-            />
-          </Pressable>
-        </Link>
+        <NavRow
+          icon="water-outline"
+          title="Tesbih görünümü"
+          subtitle={`${TAP_EFFECT_LABELS[appearance.tapEffect]} · ${HAPTIC_LABELS[appearance.hapticStrength]} titreşim`}
+          href="/tesbih-gorunum"
+        />
       </Section>
 
       <Section

@@ -197,6 +197,16 @@ export const typography = {
   time: { fontSize: 20, lineHeight: 26, fontWeight: '600', tabular: true },
   body: { fontSize: 17, lineHeight: 26, fontWeight: '400', tabular: false },
   bodyStrong: { fontSize: 17, lineHeight: 26, fontWeight: '600', tabular: false },
+  /**
+   * Buton etiketi.
+   *
+   * Boyutu gövde metniyle aynı ama satır aralığı dar (26 değil 22).
+   * Butonlar önce `bodyStrong` kullanıyordu; o token okuma metni için
+   * ayarlanmış geniş satır aralığı taşıdığı için butonlar gereksiz
+   * uzuyor ve ekrandan ekrana farklı yükseklikte çıkıyordu. Ayrı token
+   * olması ayrıca buton yazısını tek yerden değiştirilebilir kılıyor.
+   */
+  button: { fontSize: 17, lineHeight: 22, fontWeight: '600', tabular: false },
   caption: { fontSize: 14, lineHeight: 20, fontWeight: '400', tabular: false },
   label: { fontSize: 13, lineHeight: 18, fontWeight: '600', tabular: false },
 
