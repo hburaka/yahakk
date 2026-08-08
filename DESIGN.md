@@ -45,6 +45,27 @@ Kural: metin renkleri her zaman paletin nötr ekseninden gelir. Vakit rengi yaln
 ### Durum renkleri
 `success` / `danger` / `warning` semantik ve sabittir, vakit rengiyle karışmaz.
 
+### Kontrast teste bağlıdır
+
+Üç metin seviyesi de üç modun **hepsinde**, hem arka plan hem kart
+yüzeyi üzerinde AAA (7:1) tutar. `contrast.test.ts` bunu ölçüyor;
+paletten bir ton kaydırılırsa test düşer.
+
+| Seviye | Oran (en düşük yüzey) |
+|---|---|
+| `text` | 11.6–16.0:1 |
+| `textSecondary` | ~10:1 |
+| `textMuted` | ~7.05:1 |
+
+Seviyeler arasında yaklaşık 1.5× parlaklık farkı var. Bu bir estetik
+tercih değil zorunluluk: `textMuted` bir dönem yalnızca AA idi (açıkta
+5.38:1) ve tam da en küçük yazılarda kullanılıyordu. AAA'ya çekilince
+`textSecondary`'ye çok yaklaştı ve hiyerarşi üçten ikiye düştü; bu
+yüzden üçü birden yeniden dağıtıldı.
+
+Test olmasının sebebi: kontrast gözle ölçülemiyor. "AAA hedefliyoruz"
+sözü insan hafızasına bırakıldığında tutulmuyor.
+
 ## Typography
 
 Tek aile: sistem yazı tipi (`system-ui` / SF Pro / Roboto). Ürün arayüzünde display font kullanılmaz.

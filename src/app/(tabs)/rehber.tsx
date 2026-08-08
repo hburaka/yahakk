@@ -164,9 +164,17 @@ function MadhabBanner({ madhab }: { madhab: Madhab }) {
         <Text variant="caption" color="textSecondary" style={{ flex: 1 }}>
           İçerik {MADHAB_LABELS[madhab]} mezhebine göre
         </Text>
-        <Text variant="caption" color="textSecondary">
-          Değiştir
-        </Text>
+        {/*
+          Burada "Değiştir" yazan bir metin vardı. Buton gibi duruyordu
+          ama buton değildi — tıklanabilir olan bütün şerit. Yeni buton
+          diliyle yan yana gelince sahte buton gibi okunuyordu. Ok
+          işareti aynı şeyi söylüyor ve bir şey vaat etmiyor.
+        */}
+        <MaterialCommunityIcons
+          name="chevron-right"
+          size={20}
+          color={colors.textMuted}
+        />
       </Pressable>
     </Link>
   );

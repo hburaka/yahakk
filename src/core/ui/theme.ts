@@ -42,8 +42,15 @@ export type NeutralPalette = {
   /** AAA — ikincil metin */
   textSecondary: string;
   /**
-   * Yalnızca AA. Büyük metin, dekoratif etiket ve devre dışı öge
-   * dışında kullanılmamalı; küçük gövde metni için AAA hedefini tutmaz.
+   * AAA — üçüncül metin: grup etiketleri, künyeler, geçmiş vakitler.
+   *
+   * Bu ton bir dönem yalnızca AA idi (açıkta 5.38:1, koyuda 4.87:1,
+   * gecede 5.12:1) ve tam da en küçük yazılarda kullanılıyordu:
+   * `caption` 14pt ve `label` 13pt. En az okunan renk, en küçük
+   * puntoda — kullanıcı kitlesi yaş olarak üst tarafı ağır basan bir
+   * uygulamada bunun tersi olmalı. Üç mod da 7:1'e çekildi.
+   *
+   * Değiştirilirse `contrast.test.ts` düşer.
    */
   textMuted: string;
 
@@ -61,8 +68,8 @@ export const neutrals: Record<ThemeMode, NeutralPalette> = {
     borderStrong: '#C9C4B7',
 
     text: '#14120E',
-    textSecondary: '#4A463D',
-    textMuted: '#6B665B',
+    textSecondary: '#3C382F',
+    textMuted: '#524E45',
 
     danger: '#96271F',
     success: '#1B5E3F',
@@ -77,8 +84,8 @@ export const neutrals: Record<ThemeMode, NeutralPalette> = {
     borderStrong: '#3D4249',
 
     text: '#F2F1EE',
-    textSecondary: '#B4B1AA',
-    textMuted: '#83807A',
+    textSecondary: '#CECBC4',
+    textMuted: '#AEABA4',
 
     danger: '#F0A9A2',
     success: '#7FCFA4',
@@ -93,8 +100,8 @@ export const neutrals: Record<ThemeMode, NeutralPalette> = {
     borderStrong: '#332618',
 
     text: '#DFC9A6',
-    textSecondary: '#A8977B',
-    textMuted: '#8C7F68',
+    textSecondary: '#CCBB9F',
+    textMuted: '#AE9D81',
 
     danger: '#C9846A',
     success: '#A39566',

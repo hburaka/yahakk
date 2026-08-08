@@ -269,6 +269,18 @@ export default function VakitlerScreen() {
           </Text>
         </Text>
 
+        {/*
+          Buradan "Vakit 20:19" satırı kaldırıldı.
+
+          Aynı sayı, aynı ekranda, birkaç yüz piksel aşağıdaki vurgulu
+          tarife satırında zaten duruyordu. Üstelik geri sayımın hemen
+          altında ikinci bir saat olması, "24:30"un da saat sanılmasına
+          yol açıyordu — o karışıklığı "kaldı" ekleyerek yamamıştık,
+          asıl sebebi buymuş.
+
+          Tarife satırı aynı bilgiyi daha fazlasıyla taşıyor: vaktin
+          günün neresinde olduğunu da gösteriyor.
+        */}
         <View
           style={{
             width: 56,
@@ -278,13 +290,6 @@ export default function VakitlerScreen() {
             marginTop: spacing.md,
           }}
         />
-
-        <Text
-          variant="body"
-          color="textSecondary"
-          style={{ marginTop: spacing.md }}>
-          Vakit {formatMinutes(next.at)}
-        </Text>
       </View>
 
       <View style={{ marginTop: spacing.section }}>

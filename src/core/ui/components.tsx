@@ -90,7 +90,29 @@ export function Text({
     ...(token.tabular ? { fontVariant: ['tabular-nums' as const] } : null),
   };
 
-  return <RNText {...rest} style={[computed, style]} />;
+  /*
+    Sistem yazı ölçeğine tavan.
+
+    Uygulamanın kendi okuma ölçeği (0.9×–1.75×) sistem ölçeğiyle
+    ÇARPILIYOR. Android'de sistem ölçeği 2×'e kadar çıkabildiği için
+    bileşke 3.5×'e ulaşabiliyordu; o boyutta hiçbir düzen ayakta
+    kalmıyor. Zikir çipindeki kırpılma hatası bu ailenin ilk üyesiydi.
+
+    Tavan tamamen kapatmak değil, sınırlamak: okuma metinlerinde daha
+    yüksek, çünkü asıl büyütülmesi gereken onlar ve kullanıcının zaten
+    uygulama içinde ayrı bir kontrolü var. Arayüz etiketlerinde daha
+    düşük, çünkü sekme adı ve buton yazısı büyüdüğünde okunaklılık
+    artmıyor, düzen bozuluyor.
+  */
+  const maxFontSizeMultiplier = isArabic || isReadingText ? 1.8 : 1.5;
+
+  return (
+    <RNText
+      maxFontSizeMultiplier={maxFontSizeMultiplier}
+      {...rest}
+      style={[computed, style]}
+    />
+  );
 }
 
 type ScreenProps = ViewProps & {
