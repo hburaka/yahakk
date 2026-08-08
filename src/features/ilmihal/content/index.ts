@@ -1,6 +1,12 @@
 import type { IlmihalTopicContent } from '../types';
 
 import { ABDEST } from './abdest';
+import {
+  NAMAZI_BOZANLAR,
+  NAMAZIN_FARZLARI,
+  NAMAZIN_KILINISI,
+} from './namaz';
+import { ABDEST_BOZAN, GUSUL, TEYEMMUM } from './temizlik';
 
 /**
  * İlmihal konuları.
@@ -11,9 +17,18 @@ import { ABDEST } from './abdest';
  * konunun `reviewed` alanı var ve onaylanmamış içerik arayüzde uyarıyla
  * gösteriliyor.
  */
-export const ILMIHAL_CONTENT: Record<string, IlmihalTopicContent> = {
-  [ABDEST.id]: ABDEST,
-};
+const TOPICS: readonly IlmihalTopicContent[] = [
+  ABDEST,
+  ABDEST_BOZAN,
+  GUSUL,
+  TEYEMMUM,
+  NAMAZIN_FARZLARI,
+  NAMAZIN_KILINISI,
+  NAMAZI_BOZANLAR,
+];
+
+export const ILMIHAL_CONTENT: Record<string, IlmihalTopicContent> =
+  Object.fromEntries(TOPICS.map((topic) => [topic.id, topic]));
 
 export function getIlmihalTopic(id: string): IlmihalTopicContent | undefined {
   return ILMIHAL_CONTENT[id];
