@@ -1,5 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
@@ -9,6 +9,7 @@ import { Screen, Text } from '@/core/ui/components';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
+import { hasContent } from '@/features/ilmihal/content';
 import {
   DUA_CATEGORIES,
   ILMIHAL_SECTIONS,
@@ -76,18 +77,33 @@ function ListRow({
   title,
   meta,
   isFirst,
+  disabled,
+  onPress,
 }: {
   title: string;
   meta?: string;
   isFirst?: boolean;
+  /** İçeriği henüz yazılmamış konular soluk ve dokunulamaz */
+  disabled?: boolean;
+  onPress?: () => void;
 }) {
   const { colors, spacing } = useTheme();
 
   return (
     <Pressable
+      onPress={onPress}
+      disabled={disabled}
       accessibilityRole="button"
-      accessibilityLabel={meta ? `${title}, ${meta}` : title}
+      accessibilityLabel={
+        disabled
+          ? `${title}, henüz hazır değil`
+          : meta
+            ? `${title}, ${meta}`
+            : title
+      }
+      accessibilityState={{ disabled: !!disabled }}
       style={({ pressed }) => ({
+        opacity: disabled ? 0.45 : 1,
         flexDirection: 'row',
         alignItems: 'center',
         gap: spacing.md,
@@ -156,6 +172,7 @@ function MadhabBanner({ madhab }: { madhab: Madhab }) {
 
 export default function RehberScreen() {
   const { colors, spacing } = useTheme();
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>('dua');
   const [storedMadhab] = useMMKVString(StorageKeys.madhab, storage);
   const madhab: Madhab = storedMadhab === 'safii' ? 'safii' : 'hanefi';
@@ -224,14 +241,30 @@ export default function RehberScreen() {
                 style={{ marginBottom: spacing.sm }}>
                 {section.title.toLocaleUpperCase('tr-TR')}
               </Text>
-              {section.topics.map((topic, index) => (
-                <ListRow
-                  key={topic.id}
-                  title={topic.title}
-                  meta={topic.madhabSpecific ? MADHAB_LABELS[madhab] : undefined}
-                  isFirst={index === 0}
-                />
-              ))}
+              {section.topics.map((topic, index) => {
+                const ready = hasContent(topic.id);
+                return (
+                  <ListRow
+                    key={topic.id}
+                    title={topic.title}
+                    meta={
+                      !ready
+                        ? 'hazırlanıyor'
+                        : topic.madhabSpecific
+                          ? MADHAB_LABELS[madhab]
+                          : undefined
+                    }
+                    isFirst={index === 0}
+                    disabled={!ready}
+                    onPress={() =>
+                      router.push({
+                        pathname: '/ilmihal/[id]',
+                        params: { id: topic.id },
+                      })
+                    }
+                  />
+                );
+              })}
             </View>
           ))}
         </View>
