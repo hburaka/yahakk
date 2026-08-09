@@ -78,6 +78,20 @@ export const CONTENT_SOURCES: readonly ContentSource[] = [
     note: 'Türkçe hadis çevirileri telif altında. Ayrıca her rivayetin sıhhat derecesi ehil biri tarafından doğrulanmalı — bu telif meselesinden ayrı ve daha ağır bir sorumluluk.',
   },
   {
+    id: 'dua-arabic',
+    scope: 'Dua metinlerinin Arapça asılları',
+    attribution: 'Kur’an-ı Kerîm ve Kütüb-i Sitte',
+    clearance: 'public-domain',
+    note: 'Âyet ve hadis metinlerinin Arapçası kamu malıdır. Her duanın hangi kaynaktan geldiği metnin altında ayrıca yazıyor.',
+  },
+  {
+    id: 'dua-tr',
+    scope: 'Dua metinlerinin okunuşu ve Türkçe anlamı',
+    attribution: 'Kendi çalışmamız',
+    clearance: 'own-work',
+    note: 'Türkçe anlamlar telifli bir mealden ALINMADI; sade biçimde kendimiz yazdık. Telif riski böylece tamamen ortadan kalktı ve `quran-tr-diyanet` iznini beklemeye gerek kalmadı. Dinî doğruluk ayrı bir eksen: her dua `reviewed: false` ve ekranda uyarı görünüyor.',
+  },
+  {
     id: 'ilmihal',
     scope: 'İlmihal metinleri (abdest, namaz, oruç, zekât)',
     attribution: 'Kaynak belirlenecek',

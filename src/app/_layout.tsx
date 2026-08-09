@@ -233,6 +233,13 @@ function RootNavigator() {
           yaziyor.
         */}
         <Stack.Screen
+          name="dua/[id]"
+          options={{
+            title: 'Dua',
+            headerStyle: { backgroundColor: colors.background },
+          }}
+        />
+        <Stack.Screen
           name="ilmihal/[id]"
           options={{
             title: 'İlmihal',

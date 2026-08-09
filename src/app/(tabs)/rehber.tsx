@@ -11,6 +11,7 @@ import { GroupLabel } from '@/core/ui/section';
 import { MIN_TOUCH_TARGET } from '@/core/ui/theme';
 import { useTheme } from '@/core/ui/theme-context';
 import { usePeriodPalette } from '@/features/prayer-times/use-period-palette';
+import { duaCount } from '@/features/dua/content';
 import { hasContent } from '@/features/ilmihal/content';
 import {
   DUA_CATEGORIES,
@@ -217,14 +218,30 @@ export default function RehberScreen() {
 
       {tab === 'dua' ? (
         <View style={{ marginTop: spacing.xl }}>
-          {DUA_CATEGORIES.map((category, index) => (
-            <ListRow
-              key={category.id}
-              title={category.title}
-              meta={`${category.count}`}
-              isFirst={index === 0}
-            />
-          ))}
+          {DUA_CATEGORIES.map((category, index) => {
+            /*
+              Sayı içerikten türetiliyor, elle yazılmıyor. Önce
+              `category.count` sabitti: liste "12 dua" diyor, ekran boş
+              açılıyordu. Bir sayının yalan söylemesi, hiç olmamasından
+              kötü.
+            */
+            const count = duaCount(category.id);
+            return (
+              <ListRow
+                key={category.id}
+                title={category.title}
+                meta={count > 0 ? `${count}` : 'hazırlanıyor'}
+                isFirst={index === 0}
+                disabled={count === 0}
+                onPress={() =>
+                  router.push({
+                    pathname: '/dua/[id]',
+                    params: { id: category.id },
+                  })
+                }
+              />
+            );
+          })}
         </View>
       ) : (
         <View style={{ marginTop: spacing.lg, gap: spacing.xl }}>
@@ -275,7 +292,7 @@ export default function RehberScreen() {
             uyarı ikisini de yanlış anlatır ve zamanla okunmaz hale gelir. */}
         <Text variant="caption" color="textMuted">
           {tab === 'dua'
-            ? 'Dua metinleri henüz girilmedi. Kaynak ve telif durumu netleşmeden uygulamaya eklenmeyecek.'
+            ? 'Arapça metinler Kur’an ve hadis kaynaklarındandır. Türkçe anlamlar bize aittir, telifli bir mealden alınmamıştır. Hiçbiri henüz ehil biri tarafından gözden geçirilmedi.'
             : 'İlmihal metinleri Diyanet İşleri Başkanlığı İlmihali esas alınarak hazırlandı, henüz ehil biri tarafından gözden geçirilmedi. Tereddüt ettiğiniz konuda müftülüğe danışın.'}
         </Text>
       </View>

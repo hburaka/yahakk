@@ -19,18 +19,23 @@ export const MADHAB_LABELS: Record<Madhab, string> = {
 export type DuaCategory = {
   id: string;
   title: string;
-  /** Kategorideki dua sayısı — içerik girildikçe gerçekleşecek */
-  count: number;
 };
 
+/*
+  Buradan `count` alanı kaldırıldı. Elle yazılmış bir sayıydı ve
+  içerikten bağımsızdı: liste "12" diyor, ekran boş açılıyordu. Sayı
+  artık `features/dua/content` içinde gerçek içerikten türetiliyor ve
+  yalan söyleyemiyor.
+*/
+
 export const DUA_CATEGORIES: readonly DuaCategory[] = [
-  { id: 'gunluk', title: 'Sabah ve Akşam Duaları', count: 12 },
-  { id: 'namaz', title: 'Namaz Duaları', count: 9 },
-  { id: 'yemek', title: 'Yemek Duaları', count: 4 },
-  { id: 'yolculuk', title: 'Yolculuk Duaları', count: 5 },
-  { id: 'sifa', title: 'Şifa ve Sıkıntı Duaları', count: 8 },
-  { id: 'kuran', title: "Kur'an'dan Dualar", count: 15 },
-  { id: 'esma', title: "Esmâü'l-Hüsnâ", count: 99 },
+  { id: 'gunluk', title: 'Sabah ve Akşam Duaları' },
+  { id: 'namaz', title: 'Namaz Duaları' },
+  { id: 'yemek', title: 'Yemek Duaları' },
+  { id: 'yolculuk', title: 'Yolculuk Duaları' },
+  { id: 'sifa', title: 'Şifa ve Sıkıntı Duaları' },
+  { id: 'kuran', title: "Kur'an'dan Dualar" },
+  { id: 'esma', title: "Esmâü'l-Hüsnâ" },
 ] as const;
 
 export type IlmihalTopic = {
