@@ -1,7 +1,11 @@
 import type { Dua } from '../types';
 
+import { GUNLUK_DUALAR } from './gunluk';
+import { KURAN_DUALARI } from './kuran';
 import { NAMAZ_DUALARI } from './namaz';
+import { SIFA_DUALARI } from './sifa';
 import { YEMEK_DUALARI } from './yemek';
+import { YOLCULUK_DUALARI } from './yolculuk';
 
 /**
  * Dua içeriği.
@@ -15,7 +19,14 @@ import { YEMEK_DUALARI } from './yemek';
  * bu şekilde tamamen ortadan kalkıyor. Ama dinî doğruluk ayrı bir eksen:
  * hepsi `reviewed: false` ve ekranda uyarı görünüyor.
  */
-const ALL: readonly Dua[] = [...NAMAZ_DUALARI, ...YEMEK_DUALARI];
+const ALL: readonly Dua[] = [
+  ...GUNLUK_DUALAR,
+  ...NAMAZ_DUALARI,
+  ...YEMEK_DUALARI,
+  ...YOLCULUK_DUALARI,
+  ...SIFA_DUALARI,
+  ...KURAN_DUALARI,
+];
 
 /** Kategori kimliğinden o kategorinin duaları */
 export const DUAS_BY_CATEGORY: Record<string, readonly Dua[]> = ALL.reduce<
