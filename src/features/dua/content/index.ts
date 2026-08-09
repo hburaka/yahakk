@@ -1,3 +1,4 @@
+import { ESMA_COUNT } from '../esma';
 import type { Dua } from '../types';
 
 import { GUNLUK_DUALAR } from './gunluk';
@@ -48,8 +49,18 @@ export function duasFor(categoryId: string): readonly Dua[] {
  * içerikten türetiliyor, yani yalan söyleyemez.
  */
 export function duaCount(categoryId: string): number {
+  /*
+    Esmâü'l-Hüsnâ ayrı bir yapıda tutuluyor (bkz. `esma.ts`): 99 isim
+    `Dua` şekline sığmıyor ve kompakt bir liste olarak gösteriliyor.
+    Ama Rehber'in bakış açısından o da bir kategori ve sayısı doğru
+    görünmeli — yoksa "hazırlanıyor" diye soluk kalır ve açılmaz.
+  */
+  if (categoryId === ESMA_CATEGORY_ID) return ESMA_COUNT;
   return duasFor(categoryId).length;
 }
+
+/** Esmâü'l-Hüsnâ kategorisinin kimliği — özel gösterim gerektiriyor */
+export const ESMA_CATEGORY_ID = 'esma';
 
 export function hasDuaContent(categoryId: string): boolean {
   return duaCount(categoryId) > 0;

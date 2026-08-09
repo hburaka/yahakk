@@ -1,6 +1,11 @@
 import { DUA_CATEGORIES } from '@/features/rehber/data';
 
-import { ALL_DUAS, duaCount, duasFor } from './content';
+import {
+  ALL_DUAS,
+  duaCount,
+  duasFor,
+  ESMA_CATEGORY_ID,
+} from './content';
 import { hasArabicScript } from './types';
 
 /**
@@ -73,6 +78,9 @@ describe('kategori listesiyle uyum', () => {
 
   it('sayı gerçek içerikten geliyor', () => {
     for (const id of categoryIds) {
+      // Esmâü'l-Hüsnâ ayrı bir yapıda tutuluyor (bkz. `esma.ts`), o
+      // yüzden `duasFor` boş döner ama sayısı 99'dur. Kendi testi var.
+      if (id === ESMA_CATEGORY_ID) continue;
       expect(duaCount(id)).toBe(duasFor(id).length);
     }
   });
