@@ -74,7 +74,8 @@
     "test": "jest",
     "doctor": "expo-doctor",
     "db:generate": "drizzle-kit generate",
-    "verify": "npm run typecheck && npm run lint && npm test"
+    "verify": "npm run typecheck && npm run lint && npm test",
+    "release-check": "node scripts/release-check.mjs"
   },
   "private": true
 }
