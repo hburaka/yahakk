@@ -1,6 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useKeepAwake } from 'expo-keep-awake';
-import { useRouter } from 'expo-router';
+import { useIsFocused, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
@@ -462,9 +462,19 @@ export default function TesbihScreen() {
   const shakeEnabled = storedShake === 'true';
 
   const increment = counter.increment;
+
+  /*
+    `isFocused` olmadan bu özellik sessiz bir hataya dönüşüyordu.
+
+    Sekmeli gezinmede ekran başka sekmeye geçilince unmount olmuyor,
+    arka planda mount kalıyor. Yani kullanıcı Rehber'de dua okurken
+    yürüse, tesbih sayacı artmaya devam ediyordu — ve bunu ancak
+    tesbihe geri dönünce, sayıyı yanlış görünce fark ederdi.
+  */
+  const isFocused = useIsFocused();
+
   useShakeCounter({
-    // Sallama yalnızca bu ekran açıkken ve zikir devam ederken dinleniyor
-    enabled: shakeEnabled && !advancing,
+    enabled: shakeEnabled && !advancing && isFocused,
     onShake: increment,
   });
 

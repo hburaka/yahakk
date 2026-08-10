@@ -93,7 +93,7 @@ type SensorState = {
   failed: boolean;
 };
 
-export function useQibla(): QiblaState {
+export function useQibla({ active = true }: { active?: boolean } = {}): QiblaState {
   const locationState = useLocation();
   const [sensor, setSensor] = useState<SensorState>({
     heading: null,
@@ -123,8 +123,17 @@ export function useQibla(): QiblaState {
     [coordinates]
   );
 
+  /*
+    `active` sekmeli gezinme yüzünden gerekiyor.
+
+    Ekranlar başka sekmeye geçilince UNMOUNT OLMUYOR, arka planda mount
+    kalıyorlar. Yani bu efektin temizleme fonksiyonu hiç çalışmıyor ve
+    pusula, kullanıcı kıble ekranından çıktıktan sonra da saniyede
+    onlarca okuma yapmaya devam ediyordu. Günde beş kez üç saniyeliğine
+    açılan bir uygulamada bu, pilin sessizce tükenmesi demek.
+  */
   useEffect(() => {
-    if (!coordinates) return;
+    if (!coordinates || !active) return;
     let subscription: Location.LocationSubscription | null = null;
     let cancelled = false;
 
@@ -173,7 +182,7 @@ export function useQibla(): QiblaState {
       smoothed.current = null;
       subscription?.remove();
     };
-  }, [coordinates, declination]);
+  }, [coordinates, declination, active]);
 
   if (locationState.status === 'needsSelection') {
     return { status: 'noPermission' };

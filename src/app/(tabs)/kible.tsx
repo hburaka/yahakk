@@ -1,4 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useIsFocused } from 'expo-router';
 import { useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
@@ -177,7 +178,14 @@ function Unavailable({ title, detail }: { title: string; detail: string }) {
 export default function KibleScreen() {
   const { colors, spacing } = useTheme();
   const period = usePeriodPalette();
-  const state = useQibla();
+  /*
+    Odak dışında pusula da durmalı. Sekmeli gezinmede ekran unmount
+    olmadığı için abonelik kendiliğinden kapanmıyordu; kullanıcı başka
+    sekmedeyken manyetometre saniyede onlarca okuma yapmaya devam
+    ediyordu.
+  */
+  const isFocused = useIsFocused();
+  const state = useQibla({ active: isFocused });
 
   const isAligned = state.status === 'ready' && state.isAligned;
 
@@ -193,10 +201,12 @@ export default function KibleScreen() {
   );
   const hapticsEnabled = storedHaptics !== 'false';
 
+  // Titreşim de aynı sebeple odağa bağlı: ekrandan çıkıldıktan sonra
+  // telefon titremeye devam ediyordu.
   useQiblaHaptics({
     delta: state.status === 'ready' ? state.delta : null,
     isAligned,
-    enabled: hapticsEnabled,
+    enabled: hapticsEnabled && isFocused,
   });
 
   /**
