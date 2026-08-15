@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "imanlio",
-    "slug": "yahakk",
+    "slug": "imanlio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -122,7 +122,7 @@
       "revenueCatIosKey": "",
       "revenueCatAndroidKey": "",
       "eas": {
-        "projectId": "c3b592a3-e5d7-4782-b3c0-365a4630507c"
+        "projectId": "f184775d-5cf7-432c-b63b-e91e57a4d7c6"
       }
     },
     "owner": "hburakas-team"
