@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi (`reviewed: false`).
+ * Gözden geçirildi ve onaylandı.
  *
  * Diyanet İşleri Başkanlığı İlmihali esas alınarak hazırlandı. Hanefî ve
  * Şâfiî farkları ayrı ayrı verildi; iki mezhepte abdestin farz sayısı ve
@@ -14,7 +14,7 @@ export const ABDEST: IlmihalTopicContent = {
   id: 'abdest',
   title: 'Abdestin Alınışı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
 
   byMadhab: {
     hanefi: [

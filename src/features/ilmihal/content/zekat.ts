@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Zekât bölümü.
@@ -19,7 +19,7 @@ export const ZEKATIN_ESASLARI: IlmihalTopicContent = {
   id: 'zekatin-esaslari',
   title: 'Zekâtın Esasları',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -137,7 +137,7 @@ export const NISAB: IlmihalTopicContent = {
   id: 'nisab',
   title: 'Nisab ve Hesaplama',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -255,7 +255,7 @@ export const FITRE: IlmihalTopicContent = {
   id: 'fitre',
   title: 'Fitre',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

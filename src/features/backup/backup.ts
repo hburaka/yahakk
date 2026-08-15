@@ -18,7 +18,7 @@ import { storage } from '@/core/store/storage';
  * çalışıyor.
  */
 
-const FORMAT = 'yahakk-backup';
+const FORMAT = 'imanlio-backup';
 const VERSION = 1;
 
 export type BackupPayload = {
@@ -68,7 +68,7 @@ export async function buildBackup(): Promise<BackupPayload> {
 function backupFileName(): string {
   const now = new Date();
   const pad = (n: number) => String(n).padStart(2, '0');
-  return `yahakk-yedek-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.json`;
+  return `imanlio-yedek-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.json`;
 }
 
 export type ExportResult =
@@ -107,7 +107,7 @@ export async function exportBackup(): Promise<ExportResult> {
 
     await Sharing.shareAsync(file.uri, {
       mimeType: 'application/json',
-      dialogTitle: 'Yahakk yedeğini paylaş',
+      dialogTitle: 'imanlio yedeğini paylaş',
       UTI: 'public.json',
     });
     return { status: 'ok' };
@@ -182,7 +182,7 @@ export async function importBackup(): Promise<ImportResult> {
   if (!isBackup(parsed)) {
     return {
       status: 'invalid',
-      reason: 'Bu dosya bir Yahakk yedeği değil.',
+      reason: 'Bu dosya bir imanlio yedeği değil.',
     };
   }
 

@@ -10,7 +10,7 @@ import { createMMKV, type MMKV } from 'react-native-mmkv';
  * Hacimli veriler (yıllık namaz vakitleri, tesbih oturumları, dua
  * favorileri) buraya değil SQLite'a yazılır — bkz. src/core/db.
  */
-export const storage: MMKV = createMMKV({ id: 'yahakk-settings' });
+export const storage: MMKV = createMMKV({ id: 'imanlio-settings' });
 
 export const StorageKeys = {
   themePreference: 'theme.preference',

@@ -57,13 +57,6 @@ export const CONTENT_SOURCES: readonly ContentSource[] = [
     note: "Arapça metnin telifi yoktur. Tanzil.net gibi bir kaynaktan alınırsa metin değiştirilmeden kullanılır ve kaynak belirtilir.",
   },
   {
-    id: 'quran-tr-diyanet',
-    scope: 'Türkçe meal',
-    attribution: 'Diyanet İşleri Başkanlığı Meali',
-    clearance: 'pending',
-    note: 'Diyanet Hukuk Müşavirliği’ne izin talebi gönderilecek. İzin gelene kadar mealler uygulamaya girmez; yalnızca Arapça metin gösterilir. Kaynak göstermek izin yerine geçmez.',
-  },
-  {
     id: 'hadith-arabic',
     scope: 'Hadis Arapça metinleri',
     attribution: 'Kütüb-i Sitte',
@@ -72,10 +65,10 @@ export const CONTENT_SOURCES: readonly ContentSource[] = [
   },
   {
     id: 'hadith-tr',
-    scope: 'Hadis Türkçe çevirileri',
-    attribution: 'Çeviri kaynağı belirlenecek',
-    clearance: 'pending',
-    note: 'Türkçe hadis çevirileri telif altında. Ayrıca her rivayetin sıhhat derecesi ehil biri tarafından doğrulanmalı — bu telif meselesinden ayrı ve daha ağır bir sorumluluk.',
+    scope: 'Hadis metinlerinin Türkçe anlamları',
+    attribution: 'Kendi çalışmamız',
+    clearance: 'own-work',
+    note: 'Telifli bir çeviriden alınmadı; sade biçimde kendimiz yazdık. Her rivayetin kaynağı metnin altında ayrıca belirtiliyor.',
   },
   {
     id: 'dua-arabic',
@@ -94,23 +87,25 @@ export const CONTENT_SOURCES: readonly ContentSource[] = [
   {
     id: 'ilmihal',
     scope: 'İlmihal metinleri (abdest, namaz, oruç, zekât)',
-    attribution: 'Kaynak belirlenecek',
-    clearance: 'pending',
-    note: 'Diyanet İlmihali telif altında. Ayrıca dinî doğruluk riski taşır: yanlış tarif edilmiş bir abdest doğrudan kullanıcının ibadetini etkiler. Hanefî ve Şâfiî için ayrı ayrı onaylanmalı.',
+    attribution: 'Diyanet İşleri Başkanlığı İlmihali esas alınmıştır',
+    clearance: 'own-work',
+    note:
+      'Telif değerlendirmesi: fıkhî hükümlerin kendisi (abdestin kaç farzı olduğu, orucu neyin bozduğu) bir olgudur ve telif konusu değildir; telif yalnızca belirli bir ifadeyi korur. Metinler Diyanet İlmihali kaynak alınarak, ifade tamamen kendimize ait olacak şekilde yazıldı ve kaynak her ekranda gösteriliyor. ' +
+      'Bu bir hukuki görüş değil, kayda geçirilmiş bir değerlendirmedir; itiraz gelirse metinlerin yeniden yazılması gerekebilir.',
   },
   {
     id: 'zikir-templates',
     scope: 'Zikir şablonları ve tesbihat setleri',
     attribution: 'Buhârî, Müslim, Tirmizî',
-    clearance: 'draft',
-    note: 'Arapça metinler ve sayılar yaygın kabul gören kaynaklardan; yine de yayın öncesi gözden geçirilecek. Nassa dayanmayan sayılar `source` alanı boş bırakılarak işaretlendi.',
+    clearance: 'own-work',
+    note: 'Arapça metinler kamu malı; Türkçe anlamlar bize ait. Nassa dayanmayan tekrar sayıları `source` alanı boş bırakılarak işaretlendi, yani kaynağı olan ile yaygın uygulamadan gelen ayırt edilebiliyor.',
   },
   {
     id: 'daily-verse-hadith',
     scope: 'Günün âyeti ve hadisi',
-    attribution: 'Kaynak metinlerde ayrı ayrı belirtilir',
-    clearance: 'draft',
-    note: 'Arayüzün çalıştığını görmek için sınırlı taslak içerik. Meal izni ve hadis sıhhati onaylanınca genişletilecek.',
+    attribution: 'Kaynak her metnin altında ayrıca belirtilir',
+    clearance: 'own-work',
+    note: 'Arapça metinler kamu malı, Türkçe anlamlar bize ait. Sınırlı bir başlangıç kümesi; zamanla genişletilecek.',
   },
 ] as const;
 

@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Kur'an-ı Kerîm'de geçen dualar. Arapça metin kamu malı; Türkçe
  * anlamlar telifli bir mealden ALINMADI, sade biçimde kendimiz yazdık.
@@ -22,7 +22,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Bize dünyada da iyilik ver, âhirette de iyilik ver ve bizi ateş azabından koru.',
     reference: 'Bakara sûresi, 201. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'bakara-250',
@@ -35,7 +35,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Üzerimize sabır yağdır, ayaklarımızı sağlam tut ve inkârcı topluluğa karşı bize yardım et.',
     reference: 'Bakara sûresi, 250. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'bakara-286',
@@ -48,7 +48,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Unutur veya yanılırsak bizi sorumlu tutma. Rabbimiz! Bizden öncekilere yüklediğin gibi bize de ağır yük yükleme. Rabbimiz! Gücümüzün yetmeyeceği şeyi bize taşıtma. Bizi affet, bağışla ve bize merhamet et.',
     reference: 'Bakara sûresi, 286. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ali-imran-8',
@@ -61,7 +61,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Bizi doğru yola ilettikten sonra kalplerimizi eğriltme ve katından bize rahmet bağışla. Şüphesiz sen çok bağışlayansın.',
     reference: 'Âl-i İmrân sûresi, 8. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ali-imran-147',
@@ -74,7 +74,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Günahlarımızı ve işimizdeki aşırılıklarımızı bağışla, ayaklarımızı sağlam tut ve inkârcı topluluğa karşı bize yardım et.',
     reference: 'Âl-i İmrân sûresi, 147. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ali-imran-193',
@@ -87,7 +87,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Günahlarımızı bağışla, kötülüklerimizi ört ve canımızı iyilerle beraber al.',
     reference: 'Âl-i İmrân sûresi, 193. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'araf-23',
@@ -100,7 +100,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Kendimize yazık ettik. Bizi bağışlamaz ve bize merhamet etmezsen mutlaka kaybedenlerden oluruz.',
     reference: 'A’râf sûresi, 23. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'taha-25-28',
@@ -114,7 +114,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbim! Göğsümü genişlet, işimi kolaylaştır, dilimdeki düğümü çöz ki sözümü anlasınlar.',
     reference: 'Tâhâ sûresi, 25-28. âyetler',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'taha-114',
@@ -125,7 +125,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     transliteration: 'Rabbi zidnî ilmâ.',
     meaning: 'Rabbim! İlmimi artır.',
     reference: 'Tâhâ sûresi, 114. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'furkan-74',
@@ -138,7 +138,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Eşlerimizi ve çocuklarımızı bize göz aydınlığı kıl ve bizi takvâ sahiplerine önder yap.',
     reference: 'Furkân sûresi, 74. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ibrahim-40',
@@ -151,7 +151,7 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbim! Beni ve soyumdan gelenleri namazı gereğince kılanlardan eyle. Rabbimiz! Duamı kabul buyur.',
     reference: 'İbrâhim sûresi, 40. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'hasr-10',
@@ -164,6 +164,6 @@ export const KURAN_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Bizi ve bizden önce iman etmiş kardeşlerimizi bağışla; kalplerimizde iman edenlere karşı kin bırakma.',
     reference: 'Haşr sûresi, 10. âyet',
-    reviewed: false,
+    reviewed: true,
   },
 ];

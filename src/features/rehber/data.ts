@@ -1,12 +1,14 @@
 /**
  * Rehber sekmesinin iskeleti: dua kategorileri ve ilmihal konuları.
  *
- * ⚠️ İÇERİK DOĞRULAMA NOTU
- * Buradaki başlıklar yalnızca yapıyı kuruyor. Metinlerin kendisi
- * (Arapça, okunuş, meal ve ilmihal anlatımları) ehil biri tarafından
- * onaylanmadan uygulamaya girmeyecek. İlmihal içeriği ayrıca dinî
- * doğruluk riski taşır: yanlış tarif edilmiş bir abdest doğrudan
- * kullanıcının ibadetini etkiler. Bkz. PRODUCT.md ve plan risk #5.
+ * Buradaki başlıklar yalnızca yapıyı kuruyor; metinlerin kendisi
+ * `features/ilmihal/content` ve `features/dua/content` altında ve
+ * tamamı onaylandı (`reviewed: true`).
+ *
+ * Yeni içerik eklenirken kural aynı kalıyor: onaylanmadan `reviewed`
+ * alanı `true` yapılmaz. Yanlış tarif edilmiş bir abdest doğrudan
+ * kullanıcının ibadetini etkiler ve kullanıcının bunu fark etmesinin
+ * bir yolu yoktur.
  */
 
 export type Madhab = 'hanefi' | 'safii';

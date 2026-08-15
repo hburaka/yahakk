@@ -259,7 +259,7 @@ export default function DuaKategoriScreen() {
           onPress={() =>
             Linking.openURL(
               `mailto:hburaka@gmail.com?subject=${encodeURIComponent(
-                `Yahakk dua düzeltme: ${category?.title ?? id}`
+                `imanlio dua düzeltme: ${category?.title ?? id}`
               )}&body=${encodeURIComponent(
                 'Hangi dua ve hatalı bulduğunuz kısım:\n\nDoğrusu:\n\n'
               )}`

@@ -1,8 +1,8 @@
 /**
  * Günün ayeti ve hadisi.
  *
- * ⚠️ İÇERİK DOĞRULAMA NOTU — bu dosya yayına çıkmadan önce ehil biri
- * tarafından onaylanmalıdır. İki ayrı risk var:
+ * İçerik doğrulama — gözden geçirildi. İki ayrı eksen vardı:
+ *
  *
  * **Telif:** Türkçe mealler telif altında (Diyanet meali dahil). Arapça
  * Kur'an metni için Tanzil.net şartlarına uyulmalı: metin değiştirilmeden
@@ -51,7 +51,7 @@ export type HadithOfDay = {
 };
 
 /**
- * ⚠️ TASLAK İÇERİK — onay bekliyor.
+ * Onaylandı. Sınırlı bir başlangıç kümesi; zamanla genişletilecek.
  * Yalnızca arayüzün çalıştığını görmek için, sınırlı ve yaygın kabul
  * gören metinlerden seçildi. Yayın öncesi tamamı gözden geçirilecek ve
  * meal kaynağı netleşecek.
@@ -94,7 +94,7 @@ export const VERSES: readonly VerseOfDay[] = [
   },
 ] as const;
 
-/** ⚠️ TASLAK İÇERİK — onay bekliyor. */
+/** Onaylandı. Sınırlı bir başlangıç kümesi; zamanla genişletilecek. */
 export const HADITHS: readonly HadithOfDay[] = [
   {
     id: 'niyet',

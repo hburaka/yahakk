@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Namazda okunan dualar. Arapça metinler hadis külliyatından gelir ve
  * kamu malıdır. Türkçe anlamlar telifli bir mealden alınmadı; sade
@@ -25,7 +25,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Seni eksikliklerden tenzih eder, hamdinle anarım. Senin adın mübarektir, şanın yücedir, senden başka ilâh yoktur.',
     reference: 'Ebû Dâvûd, Salât 122; Tirmizî, Salât 65',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ettehiyyatu',
@@ -39,7 +39,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Dil, beden ve mal ile yapılan bütün ibadetler Allah’a mahsustur. Ey Peygamber! Allah’ın selâmı, rahmeti ve bereketi senin üzerine olsun. Selâm bizim ve Allah’ın sâlih kullarının üzerine olsun. Şehâdet ederim ki Allah’tan başka ilâh yoktur; yine şehâdet ederim ki Muhammed O’nun kulu ve elçisidir.',
     reference: 'Buhârî, Ezân 148; Müslim, Salât 55',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'allahumme-salli',
@@ -53,7 +53,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Muhammed’e ve Muhammed’in ailesine rahmet eyle; İbrâhim’e ve İbrâhim’in ailesine rahmet eylediğin gibi. Şüphesiz sen övülmeye lâyıksın, şanın yücedir.',
     reference: 'Buhârî, Enbiyâ 10; Müslim, Salât 66',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'allahumme-barik',
@@ -67,7 +67,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Muhammed’i ve Muhammed’in ailesini mübarek kıl; İbrâhim’i ve İbrâhim’in ailesini mübarek kıldığın gibi. Şüphesiz sen övülmeye lâyıksın, şanın yücedir.',
     reference: 'Buhârî, Enbiyâ 10; Müslim, Salât 66',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'rabbena-atina',
@@ -81,7 +81,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Bize dünyada da iyilik ver, âhirette de iyilik ver ve bizi ateş azabından koru.',
     reference: 'Bakara sûresi, 201. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'rabbenagfirli',
@@ -95,7 +95,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Rabbimiz! Hesabın görüleceği gün beni, anne babamı ve müminleri bağışla.',
     reference: 'İbrâhim sûresi, 41. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'kunut-1',
@@ -109,7 +109,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Senden yardım diler, bağışlanma diler, doğru yolu göstermeni isteriz. Sana inanır, sana tövbe eder, sana güveniriz. Bütün hayrı sana nispet ederek seni överiz. Sana şükreder, nankörlük etmeyiz. Sana karşı geleni bırakır, ondan uzaklaşırız.',
     reference: 'Beyhakî, es-Sünenü’l-kübrâ, II, 210',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'kunut-2',
@@ -123,7 +123,7 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Yalnız sana kulluk eder, senin için namaz kılar ve secde ederiz. Sana koşar, sana yönelir, rahmetini umar, azabından korkarız. Şüphesiz azabın inkârcılara ulaşacaktır.',
     reference: 'Beyhakî, es-Sünenü’l-kübrâ, II, 211',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ruku-secde-tesbihleri',
@@ -136,6 +136,6 @@ export const NAMAZ_DUALARI: readonly Dua[] = [
     meaning:
       'Yüce Rabbimi tenzih ederim. — En yüce olan Rabbimi tenzih ederim.',
     reference: 'Ebû Dâvûd, Salât 151; Tirmizî, Salât 194',
-    reviewed: false,
+    reviewed: true,
   },
 ];

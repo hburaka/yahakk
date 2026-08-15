@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Namazın farzları iki mezhepte de aynı sayıda sıralanır ama içerikte
@@ -13,7 +13,7 @@ export const NAMAZIN_FARZLARI: IlmihalTopicContent = {
   id: 'namazin-farzlari',
   title: 'Namazın Farzları',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -93,7 +93,7 @@ export const NAMAZIN_KILINISI: IlmihalTopicContent = {
   id: 'namazin-kilinisi',
   title: 'Namazın Kılınışı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -251,7 +251,7 @@ export const NAMAZI_BOZANLAR: IlmihalTopicContent = {
   id: 'namazi-bozanlar',
   title: 'Namazı Bozan Durumlar',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

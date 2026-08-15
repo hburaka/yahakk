@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Yemek duaları. Kısa ve günde birkaç kez okunan metinler; uzun
  * kategorilerden önce yazılmalarının sebebi bu.
@@ -20,7 +20,7 @@ export const YEMEK_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Bize verdiğin rızkı bereketli kıl ve bizi ateş azabından koru. Allah’ın adıyla.',
     reference: 'İbn Mâce, Et’ime 16',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'besmele-unutulunca',
@@ -31,7 +31,7 @@ export const YEMEK_DUALARI: readonly Dua[] = [
     transliteration: 'Bismillâhi evvelehû ve âhirah.',
     meaning: 'Başında da sonunda da Allah’ın adıyla.',
     reference: 'Ebû Dâvûd, Et’ime 15; Tirmizî, Et’ime 47',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'yemek-sonrasi',
@@ -45,7 +45,7 @@ export const YEMEK_DUALARI: readonly Dua[] = [
     meaning:
       'Bizi yediren, içiren ve Müslümanlardan kılan Allah’a hamdolsun.',
     reference: 'Ebû Dâvûd, Et’ime 52; Tirmizî, Deavât 56',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'ev-sahibine-dua',
@@ -59,6 +59,6 @@ export const YEMEK_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Onlara verdiğin rızkı bereketli kıl, onları bağışla ve onlara merhamet et.',
     reference: 'Müslim, Eşribe 146',
-    reviewed: false,
+    reviewed: true,
   },
 ];

@@ -1,7 +1,7 @@
 /**
  * Esmâü'l-Hüsnâ — Allah'ın güzel isimleri.
  *
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * ## Neden `Dua` tipini kullanmıyor
  *

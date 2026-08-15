@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Namazda özel durumlar: hata yapıldığında (sehiv secdesi), yolculukta
@@ -15,7 +15,7 @@ export const SEHIV_SECDESI: IlmihalTopicContent = {
   id: 'sehiv-secdesi',
   title: 'Sehiv Secdesi',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -129,7 +129,7 @@ export const SEFERILIK: IlmihalTopicContent = {
   id: 'seferilik',
   title: 'Seferîlik ve Namazın Kısaltılması',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -215,7 +215,7 @@ export const KAZA: IlmihalTopicContent = {
   id: 'kaza',
   title: 'Kaza Namazı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

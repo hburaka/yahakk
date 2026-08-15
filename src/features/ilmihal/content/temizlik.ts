@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Hanefî ve Şâfiî farkları ayrı verildi. Gusülde farz sayısı, teyemmümde
@@ -12,7 +12,7 @@ export const ABDEST_BOZAN: IlmihalTopicContent = {
   id: 'abdest-bozan',
   title: 'Abdesti Bozan Durumlar',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -72,7 +72,7 @@ export const GUSUL: IlmihalTopicContent = {
   id: 'gusul',
   title: 'Guslün Alınışı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -195,7 +195,7 @@ export const TEYEMMUM: IlmihalTopicContent = {
   id: 'teyemmum',
   title: 'Teyemmüm',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

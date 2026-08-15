@@ -243,7 +243,7 @@ export default function IlmihalDetayScreen() {
           onPress={() =>
             Linking.openURL(
               `mailto:hburaka@gmail.com?subject=${encodeURIComponent(
-                `Yahakk ilmihal düzeltme: ${topic.title} (${MADHAB_LABELS[madhab]})`
+                `imanlio ilmihal düzeltme: ${topic.title} (${MADHAB_LABELS[madhab]})`
               )}&body=${encodeURIComponent(
                 'Hatalı bulduğunuz kısmı ve doğrusunu yazabilir misiniz?\n\n'
               )}`

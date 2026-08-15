@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Yahakk",
+    "name": "imanlio",
     "slug": "yahakk",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "yahakk",
+    "scheme": "imanlio",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#FBFAF7",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.yahakk.app",
+      "bundleIdentifier": "com.imanlio.app",
       "supportsTablet": true,
       "infoPlist": {
         "UIBackgroundModes": [
@@ -21,7 +21,7 @@
       }
     },
     "android": {
-      "package": "com.yahakk.app",
+      "package": "com.imanlio.app",
       "adaptiveIcon": {
         "backgroundColor": "#0E6B52",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -42,7 +42,8 @@
         "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
       "blockedPermissions": [
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.SYSTEM_ALERT_WINDOW"
       ],
       "allowBackup": true
     },

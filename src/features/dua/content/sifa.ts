@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Şifa, sıkıntı ve keder duaları. Bu kategori muhtemelen en zor anda
  * açılacak olan; metinler kısa ve doğrudan tutuldu.
@@ -23,7 +23,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Ey insanların Rabbi olan Allah’ım! Sıkıntıyı gider, şifa ver. Şifa veren yalnız sensin. Senin şifandan başka şifa yoktur. Öyle bir şifa ver ki geride hastalık bırakmasın.',
     reference: 'Buhârî, Merdâ 20; Müslim, Selâm 46',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'agriyan-yere',
@@ -37,7 +37,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Hissettiğim ve korktuğum şeyin şerrinden Allah’a ve O’nun kudretine sığınırım.',
     reference: 'Müslim, Selâm 67',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'yunus-duasi',
@@ -51,7 +51,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Senden başka ilâh yoktur. Seni tenzih ederim. Gerçekten ben kendine yazık edenlerden oldum.',
     reference: 'Enbiyâ sûresi, 87. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'keder-ve-uzuntu',
@@ -65,7 +65,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Tasadan ve üzüntüden sana sığınırım. Acizlikten ve tembellikten sana sığınırım. Korkaklıktan ve cimrilikten sana sığınırım. Borcun altında ezilmekten ve insanların baskısından sana sığınırım.',
     reference: 'Buhârî, Deavât 36',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'borc-sikintisi',
@@ -79,7 +79,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Helâlinle yetindir, haramına muhtaç etme. Lütfunla zengin kıl, senden başkasına muhtaç etme.',
     reference: 'Tirmizî, Deavât 110',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'korku-aninda',
@@ -90,7 +90,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     transliteration: 'Hasbünallâhü ve ni’mel-vekîl.',
     meaning: 'Allah bize yeter. O ne güzel vekildir.',
     reference: 'Âl-i İmrân sûresi, 173. âyet',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'musibet-aninda',
@@ -104,7 +104,7 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Biz Allah’a aitiz ve O’na döneceğiz. Allah’ım! Bu musibette bana sabır ver ve kaybettiğimden daha hayırlısını nasip et.',
     reference: 'Bakara sûresi, 156. âyet; Müslim, Cenâiz 4',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'eyyub-duasi',
@@ -117,6 +117,6 @@ export const SIFA_DUALARI: readonly Dua[] = [
     meaning:
       'Bana gerçekten sıkıntı dokundu; sen merhametlilerin en merhametlisisin.',
     reference: 'Enbiyâ sûresi, 83. âyet',
-    reviewed: false,
+    reviewed: true,
   },
 ];

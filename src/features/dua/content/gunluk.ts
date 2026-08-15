@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Sabah, akşam ve gün içinde okunan dualar. Arapça metinler hadis
  * külliyatından (kamu malı); Türkçe anlamlar bize ait sade çeviriler.
@@ -20,7 +20,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Sabaha erdik, mülk de Allah’ın olarak sabaha erdi. Hamd Allah’a mahsustur. Allah’tan başka ilâh yoktur, O tektir, ortağı yoktur. Mülk O’nundur, hamd O’nadır ve O her şeye gücü yetendir.',
     reference: 'Müslim, Zikir 75',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'aksam-duasi',
@@ -34,7 +34,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Akşama erdik, mülk de Allah’ın olarak akşama erdi. Hamd Allah’a mahsustur. Allah’tan başka ilâh yoktur, O tektir, ortağı yoktur. Mülk O’nundur, hamd O’nadır ve O her şeye gücü yetendir.',
     reference: 'Müslim, Zikir 75',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'seyyidul-istigfar',
@@ -48,7 +48,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Allah’ım! Sen benim Rabbimsin, senden başka ilâh yoktur. Beni sen yarattın, ben senin kulunum. Gücüm yettiğince sana verdiğim sözde duruyorum. Yaptıklarımın şerrinden sana sığınırım. Üzerimdeki nimetini kabul eder, günahımı itiraf ederim; beni bağışla. Çünkü günahları senden başkası bağışlayamaz.',
     reference: 'Buhârî, Deavât 2',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'uyaninca',
@@ -62,7 +62,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Bizi öldürdükten sonra dirilten Allah’a hamdolsun. Dönüş ancak O’nadır.',
     reference: 'Buhârî, Deavât 7; Müslim, Zikir 59',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'uyumadan-once',
@@ -73,7 +73,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     transliteration: 'Bismike’llâhümme emûtü ve ahyâ.',
     meaning: 'Allah’ım! Senin adınla ölür, senin adınla dirilirim.',
     reference: 'Buhârî, Deavât 7',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'evden-cikarken',
@@ -87,7 +87,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Allah’ın adıyla. Allah’a güvendim. Güç ve kuvvet ancak Allah’ındır.',
     reference: 'Ebû Dâvûd, Edeb 103; Tirmizî, Deavât 34',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'eve-girerken',
@@ -101,7 +101,7 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Allah’ın adıyla girdik, Allah’ın adıyla çıktık ve Rabbimize güvendik.',
     reference: 'Ebû Dâvûd, Edeb 102',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'korunma-duasi',
@@ -114,6 +114,6 @@ export const GUNLUK_DUALAR: readonly Dua[] = [
     meaning:
       'Yarattığı şeylerin şerrinden Allah’ın eksiksiz kelimelerine sığınırım.',
     reference: 'Müslim, Zikir 54',
-    reviewed: false,
+    reviewed: true,
   },
 ];

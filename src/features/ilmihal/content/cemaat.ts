@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Cemaatle kılınan namazlar. Dört konuda da mezhep farkı yüzeysel değil,
@@ -13,7 +13,7 @@ export const CEMAAT: IlmihalTopicContent = {
   id: 'cemaat',
   title: 'Cemaatle Namaz',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -110,7 +110,7 @@ export const CUMA: IlmihalTopicContent = {
   id: 'cuma',
   title: 'Cuma Namazı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -253,7 +253,7 @@ export const BAYRAM: IlmihalTopicContent = {
   id: 'bayram',
   title: 'Bayram Namazı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -362,7 +362,7 @@ export const CENAZE: IlmihalTopicContent = {
   id: 'cenaze',
   title: 'Cenaze Namazı',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

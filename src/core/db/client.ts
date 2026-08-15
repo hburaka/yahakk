@@ -8,7 +8,7 @@ import * as schema from '@/core/db/schema';
  * bununla çalışıyor. Tesbih sayacı ve vakit geri sayımı gibi ekranlar
  * veriyi elle tazelemek yerine canlı sorguyla dinliyor.
  */
-const sqlite = SQLite.openDatabaseSync('yahakk.db', {
+const sqlite = SQLite.openDatabaseSync('imanlio.db', {
   enableChangeListener: true,
 });
 

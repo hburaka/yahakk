@@ -1,7 +1,7 @@
 /**
  * Hazır zikir şablonları.
  *
- * ⚠️ İÇERİK DOĞRULAMA NOTU
+ * İçerik doğrulama
  * Buradaki Arapça metinler, okunuşlar, anlamlar ve tekrar sayıları yayına
  * çıkmadan önce ehil biri tarafından gözden geçirilmelidir. `source` alanı
  * boş olan kayıtlar hadis kaynağına dayanmayan, yaygın kullanımdan gelen

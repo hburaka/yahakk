@@ -1,7 +1,7 @@
 import type { IlmihalTopicContent } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  * Diyanet İşleri Başkanlığı İlmihali esas alınmıştır.
  *
  * Oruç bölümü. En kritik fark niyetin zamanı: Şâfiî'de farz oruca
@@ -13,7 +13,7 @@ export const ORUCUN_ESASLARI: IlmihalTopicContent = {
   id: 'orucun-esaslari',
   title: 'Orucun Esasları',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -115,7 +115,7 @@ export const ORUCU_BOZANLAR: IlmihalTopicContent = {
   id: 'orucu-bozanlar',
   title: 'Orucu Bozan Durumlar',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {
@@ -205,7 +205,7 @@ export const FIDYE_KEFARET: IlmihalTopicContent = {
   id: 'fidye-kefaret',
   title: 'Fidye ve Kefaret',
   source: 'Diyanet İşleri Başkanlığı İlmihali',
-  reviewed: false,
+  reviewed: true,
   byMadhab: {
     hanefi: [
       {

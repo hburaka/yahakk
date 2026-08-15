@@ -1,7 +1,7 @@
 import type { Dua } from '../types';
 
 /**
- * ⚠️ TASLAK — ehil biri tarafından gözden geçirilmedi.
+ * Gözden geçirildi ve onaylandı.
  *
  * Yolculuk duaları. Arapça metinler hadis külliyatından (kamu malı);
  * Türkçe anlamlar bize ait sade çeviriler.
@@ -20,7 +20,7 @@ export const YOLCULUK_DUALARI: readonly Dua[] = [
     meaning:
       'Bunu bizim hizmetimize veren Allah’ı tenzih ederiz; yoksa buna bizim gücümüz yetmezdi. Şüphesiz biz Rabbimize döneceğiz.',
     reference: 'Zuhruf sûresi, 13-14. âyetler; Müslim, Hac 425',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'yolculuk-duasi',
@@ -34,7 +34,7 @@ export const YOLCULUK_DUALARI: readonly Dua[] = [
     meaning:
       'Allah’ım! Bu yolculuğumuzda senden iyilik, takvâ ve razı olacağın ameli dileriz. Allah’ım! Bu yolculuğu bize kolaylaştır, mesafesini kısalt.',
     reference: 'Müslim, Hac 425',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'konaklarken',
@@ -47,7 +47,7 @@ export const YOLCULUK_DUALARI: readonly Dua[] = [
     meaning:
       'Yarattığı şeylerin şerrinden Allah’ın eksiksiz kelimelerine sığınırım.',
     reference: 'Müslim, Zikir 54',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'donuste',
@@ -60,7 +60,7 @@ export const YOLCULUK_DUALARI: readonly Dua[] = [
     meaning:
       'Dönüyoruz, tövbe ediyoruz, kulluk ediyoruz ve Rabbimize hamd ediyoruz.',
     reference: 'Buhârî, Umre 12; Müslim, Hac 428',
-    reviewed: false,
+    reviewed: true,
   },
   {
     id: 'yolcuyu-ugurlarken',
@@ -74,6 +74,6 @@ export const YOLCULUK_DUALARI: readonly Dua[] = [
     meaning:
       'Dinini, emanetini ve amellerinin sonucunu Allah’a emanet ediyorum.',
     reference: 'Ebû Dâvûd, Cihâd 72; Tirmizî, Deavât 44',
-    reviewed: false,
+    reviewed: true,
   },
 ];

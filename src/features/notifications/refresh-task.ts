@@ -16,7 +16,7 @@ import { readMargins } from '@/features/prayer-times/use-prayer-settings';
 
 import { rescheduleAll } from './scheduler';
 
-export const REFRESH_TASK = 'yahakk-refresh-notifications';
+export const REFRESH_TASK = 'imanlio-refresh-notifications';
 
 /**
  * Bildirim penceresini arka planda ileri kaydırır.
