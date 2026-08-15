@@ -1,6 +1,7 @@
+import Constants from 'expo-constants';
 import { usePathname } from 'expo-router';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import {
   BannerAd,
   BannerAdSize,
@@ -14,15 +15,35 @@ import { canShowAd } from './ad-gate';
 import { useAds } from './ads-context';
 
 /**
- * Reklam birimleri.
+ * Banner reklam birimi.
  *
- * Gerçek AdMob kimlikleri hesap açıldığında buraya girilecek. Geliştirme
- * sırasında Google'ın test kimlikleri kullanılıyor — gerçek kimlikle
- * geliştirme yapmak hesabın askıya alınmasına yol açıyor.
+ * İki kural var ve ikisi de hesabın askıya alınmasını önlüyor:
+ *
+ * 1. **Geliştirmede her zaman test kimliği.** Gerçek kimlikle
+ *    geliştirme yapmak, kendi reklamına tıklamak sayılıyor ve AdMob
+ *    bunu geçersiz trafik olarak işaretliyor.
+ * 2. **Yayında test kimliği YOK.** Gerçek kimlik girilmemişse banner
+ *    hiç gösterilmiyor. Test reklamı göstermek gelir üretmediği gibi
+ *    kullanıcıya "AdMob Adaptive Banner" yazan bir kutu göstermek
+ *    demek — reklamsız olmak ondan iyidir.
+ *
+ * Kimlik `app.json` içindeki `extra` alanından okunuyor; kod
+ * değiştirmeden girilebilsin diye.
  */
-const AD_UNITS = {
-  banner: __DEV__ ? TestIds.ADAPTIVE_BANNER : TestIds.ADAPTIVE_BANNER,
-} as const;
+type AdExtra = {
+  admobBannerAndroid?: string;
+  admobBannerIos?: string;
+};
+
+function resolveBannerUnitId(): string | null {
+  if (__DEV__) return TestIds.ADAPTIVE_BANNER;
+
+  const extra = (Constants.expoConfig?.extra ?? {}) as AdExtra;
+  const id =
+    Platform.OS === 'ios' ? extra.admobBannerIos : extra.admobBannerAndroid;
+
+  return id && id.length > 0 ? id : null;
+}
 
 /**
  * Ekranın altına yerleşen banner.
@@ -55,7 +76,11 @@ export function AdBanner() {
     hasConsent: ads.canRequestAds,
   });
 
-  if (!ads.ready || !decision.allowed || failed) return null;
+  // Yayında gerçek kimlik yoksa banner hiç gösterilmiyor; test reklamı
+  // kullanıcıya "AdMob Adaptive Banner" yazan bir kutu göstermek demek.
+  const unitId = resolveBannerUnitId();
+
+  if (!ads.ready || !decision.allowed || failed || !unitId) return null;
 
   return (
     <View
@@ -69,7 +94,7 @@ export function AdBanner() {
         borderTopColor: colors.border,
       }}>
       <BannerAd
-        unitId={AD_UNITS.banner}
+        unitId={unitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
           // Rıza yoksa veya ATT reddedildiyse kişiselleştirme kapalı.

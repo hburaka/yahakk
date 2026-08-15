@@ -11,7 +11,10 @@ import { useMMKVString } from 'react-native-mmkv';
 
 import { useAds } from '@/features/ads/ads-context';
 import { exportBackup, importBackup } from '@/features/backup/backup';
-import { purchaseSupport } from '@/features/iap/purchases';
+import {
+  isPurchaseAvailable,
+  purchaseSupport,
+} from '@/features/iap/purchases';
 import {
   HAPTIC_LABELS,
   TAP_EFFECT_LABELS,
@@ -162,6 +165,7 @@ export default function AyarlarScreen() {
 
   const { appearance } = useTesbihAppearance();
   const ads = useAds();
+  const purchaseAvailable = isPurchaseAvailable();
   const [busy, setBusy] = useState<
     'export' | 'import' | 'support' | 'restore' | null
   >(null);
@@ -288,6 +292,13 @@ export default function AyarlarScreen() {
         />
       </Section>
 
+      {/*
+        Satın alma yapılandırılmamışsa bu bölüm hiç görünmüyor.
+        Anahtar yokken düğmeyi göstermek, basınca "şu an kullanılamıyor"
+        diyen bir düğme göstermek demekti. Anahtar girildiğinde bölüm
+        kendiliğinden geri geliyor.
+      */}
+      {purchaseAvailable ? (
       <Section
         title="Uygulamayı destekle"
         description={
@@ -336,6 +347,7 @@ export default function AyarlarScreen() {
           </>
         )}
       </Section>
+      ) : null}
 
       <Section
         title="Tesbih"

@@ -36,6 +36,18 @@ export const NOT_CONFIGURED: PurchasesState = {
   isPremium: false,
 };
 
+/**
+ * Satın alma altyapısı hazır mı.
+ *
+ * Arayüz bunu sorup "Uygulamayı destekle" bölümünü tamamen gizliyor.
+ * Anahtar yokken düğmeyi göstermek, basınca "şu an kullanılamıyor"
+ * diyen bir düğme göstermek demek — çalışmayan bir düğme, hiç olmayan
+ * düğmeden kötü. Anahtar girildiğinde bölüm kendiliğinden geri gelir.
+ */
+export function isPurchaseAvailable(): boolean {
+  return apiKey() !== null;
+}
+
 async function load() {
   // Tembel yükleme: anahtar yokken native modülü hiç uyandırmıyoruz,
   // ayrıca modülün bulunmadığı bir derlemede uygulama çökmüyor.

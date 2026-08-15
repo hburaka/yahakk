@@ -117,27 +117,54 @@ check(
     : pkg
 );
 
+/*
+  AdMob iki ayrı kimlik istiyor ve ikisi de gerekli:
+  - Uygulama kimliği (`~` işaretli) manifeste gömülüyor
+  - Reklam birimi kimliği (`/` işaretli) banner'ın kendisi
+
+  Yalnızca birincisi girilirse reklam hiç gösterilmez ve bu sessiz bir
+  hata olur; o yüzden ikisi ayrı ayrı kontrol ediliyor.
+
+  Kontroller Android'e bakıyor: iOS'a çıkılmıyor ve oradaki test
+  kimliği bir engel değil.
+*/
 const adPlugin = (expo.plugins ?? []).find(
   (plugin) => Array.isArray(plugin) && plugin[0] === 'react-native-google-mobile-ads'
 );
-const adIds = adPlugin ? JSON.stringify(adPlugin[1]) : '';
+const androidAppId = adPlugin?.[1]?.androidAppId ?? '';
 check(
-  'Gerçek AdMob kimlikleri girildi',
-  adIds.length > 0 && !adIds.includes(ADMOB_TEST_PREFIX),
-  adIds.includes(ADMOB_TEST_PREFIX)
-    ? 'Hâlâ Google test kimlikleri kullanılıyor; yayında hiç gelir üretmez.'
-    : 'Gerçek kimlikler girilmiş.'
+  'AdMob uygulama kimliği (Android)',
+  androidAppId.length > 0 && !androidAppId.includes(ADMOB_TEST_PREFIX),
+  androidAppId.includes(ADMOB_TEST_PREFIX)
+    ? 'Hâlâ Google test kimliği. Yayında hiç gelir üretmez.'
+    : androidAppId
+);
+
+const bannerAndroid = expo.extra?.admobBannerAndroid ?? '';
+check(
+  'AdMob banner birimi (Android)',
+  bannerAndroid.length > 0 && !bannerAndroid.includes(ADMOB_TEST_PREFIX),
+  bannerAndroid.length === 0
+    ? 'Boş. Yayında banner hiç gösterilmez — kod bunu bilerek yapıyor, test reklamı göstermektense reklamsız olmak yeğdir.'
+    : bannerAndroid
 );
 
 const extra = JSON.stringify(expo.extra ?? {});
 const hasRevenueCat =
   /"revenueCat(Ios|Android)Key"\s*:\s*"[^"]+"/.test(extra);
+/*
+  Engel değil, uyarı. Anahtar yokken "Uygulamayı destekle" bölümü
+  arayüzde hiç görünmüyor (bkz. `isPurchaseAvailable`), yani kullanıcı
+  çalışmayan bir düğmeyle karşılaşmıyor. Uygulama bu hâliyle yayına
+  çıkabilir; tek sonucu reklamların kaldırılamaması.
+*/
 check(
   'RevenueCat anahtarları girildi',
   hasRevenueCat,
   hasRevenueCat
     ? 'Girilmiş.'
-    : 'Boş. Satın alma "şu an kullanılamıyor" diyecek.'
+    : 'Boş. Destek bölümü arayüzde gizli kalıyor, yani reklamlar kaldırılamıyor. Uygulama yine de çalışıyor; sonradan eklenebilir.',
+  'warning'
 );
 
 const manifestPermissions = readIfExists('app.json') ?? '';

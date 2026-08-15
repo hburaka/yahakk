@@ -99,7 +99,7 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
+          "androidAppId": "ca-app-pub-4807632655201475~9475224825",
           "iosAppId": "ca-app-pub-3940256099942544~1458002511",
           "userTrackingUsageDescription": "Size ilgi alanınıza uygun reklamlar gösterebilmek için kullanılır. İzin vermezseniz reklamlar yine gösterilir, sadece kişiselleştirilmez.",
           "delayAppMeasurementInit": true
@@ -118,6 +118,9 @@
     },
     "extra": {
       "router": {},
+      "_comment_admob": "Banner reklam birimi kimlikleri. Boş bırakılırsa yayında banner hiç gösterilmez — test reklamı göstermektense reklamsız olmak yeğdir. Geliştirmede her zaman Google'ın test kimliği kullanılır.",
+      "admobBannerAndroid": "ca-app-pub-4807632655201475/5009220419",
+      "admobBannerIos": "",
       "_comment_revenuecat": "RevenueCat anahtarları hesap açılınca doldurulacak. Boş bırakıldığında satın alma katmanı sessizce devre dışı kalır ve uygulama sorunsuz çalışır.",
       "revenueCatIosKey": "",
       "revenueCatAndroidKey": "",
