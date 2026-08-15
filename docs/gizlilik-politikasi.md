@@ -1,3 +1,8 @@
+---
+title: Gizlilik Politikası
+permalink: /gizlilik-politikasi/
+---
+
 # imanlio — Gizlilik Politikası
 
 **Son güncelleme:** 9 Ağustos 2026

@@ -1,0 +1,16 @@
+# GitHub Pages yapılandırması.
+#
+# Yalnızca gizlilik politikasını yayınlamak için var. Play Console
+# gizlilik politikası URL'sini zorunlu tutuyor ve markdown dosyası
+# doğrudan sunulursa tarayıcıda ham metin olarak iniyor — inceleyicinin
+# okuyabileceği bir sayfa olması gerekiyor.
+
+title: imanlio
+description: Namaz vakti, kıble, tesbih, dua ve ilmihal. Sunucusuz, hesapsız.
+theme: jekyll-theme-primer
+lang: tr
+
+# Uygulama kaynak dosyaları Pages tarafından işlenmesin
+exclude:
+  - "*.tsx"
+  - "*.ts"
