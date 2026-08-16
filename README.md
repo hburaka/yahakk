@@ -1,56 +1,80 @@
-# Welcome to your Expo app 👋
+# imanlio
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Namaz vakitleri, kıble, tesbih, dua ve ilmihal. Tek uygulamada, Türkçe.
 
-## Get started
+**Sunucu yok. Hesap yok. Konum cihazdan çıkmıyor.** Bu bir vaat değil,
+mimarinin sonucu: veriyi saklayacağımız bir yer yok.
 
-1. Install dependencies
+- Uygulama: Android (Play Store'a hazırlanıyor)
+- Gizlilik politikası: https://hburaka.github.io/imanlio/gizlilik-politikasi/
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Ne yapıyor
 
-   ```bash
-   npx expo start
-   ```
+**Vakitler** cihazda astronomik hesapla bulunuyor, internet gerekmiyor.
+Ankara ve İstanbul için 122 gün Diyanet'in yayınladığı vakitlerle
+karşılaştırıldı: en büyük sapma 2 dakika, ortalama sıfır. Ölçüm
+`scripts/compare-diyanet.mjs` ile tekrarlanabilir.
 
-In the output, you'll find options to open the app in a
+**Kıble** gerçek kuzeye göre, manyetik sapma düzeltilerek. Titreşimle
+yön bulma var: telefonu çevirdikçe titreşim sıklaşıyor, ekrana bakmadan
+kıble bulunabiliyor.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+**Tesbih** ekranın tamamını sayma alanı yapıyor. Zincirli tesbihat
+setleri otomatik ilerliyor, yarım kalan zikir kaldığı yerden devam
+ediyor. Sallayarak sayma ve tam ekran sayma kipi var.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+**Dua ve ilmihal** Hanefî ve Şâfiî için ayrı ayrı. Fark yüzeysel değil:
+Şâfiî'de imama uyan Fâtiha'yı kendi okur, Hanefî'de susup dinler.
+Tek metinle anlatmak okuyucunun yarısına yanlış bilgi vermek olurdu.
 
-## Get a fresh project
+**İbadet ekranında reklam yok.** Kıble, tesbih, dua ve ilmihal
+ekranlarında hiçbir koşulda reklam gösterilmiyor; ezan vaktinin on
+dakika öncesi ve sonrası da reklamsız. Bu koda gömülü ve testle
+korunan bir kural, tercih değil.
 
-When you're ready, run:
+---
+
+## Geliştirme
+
+Expo SDK 57 · React Native 0.86 · TypeScript · expo-router
 
 ```bash
-npm run reset-project
+npm install
+npm run verify           # typecheck + lint + test
+npx expo start --tunnel  # dev client ile telefonda çalıştır
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Reklam ve satın alma native modül gerektiriyor, Expo Go çalışmaz —
+dev build şart.
 
-### Other setup steps
+```bash
+npx eas-cli build --profile preview --platform android
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+---
 
-## Learn more
+## Belgeler
 
-To learn more about developing your project with Expo, look at the following resources:
+| | |
+|---|---|
+| [DURUM.md](DURUM.md) | **Buradan başla.** Proje nerede, sırada ne var, hangi tuzaklar var |
+| [PRODUCT.md](PRODUCT.md) | Kullanıcı kim, hangi ilkeler |
+| [DESIGN.md](DESIGN.md) | Renk, tipografi, buton dili |
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
+## Dinî içerik hakkında
 
-Join our community of developers creating universal apps.
+İlmihal metinleri Diyanet İşleri Başkanlığı İlmihali esas alınarak
+yazıldı. Arapça dua ve âyet metinleri Kur'an-ı Kerîm ve klasik hadis
+külliyatındandır, kamu malıdır. Türkçe anlamlar telifli bir mealden
+alınmadı; sade biçimde kendimiz yazdık.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Her ekranda kaynak künyesi ve "Bu bilgide hata var" düğmesi var.
+Hatayı en iyi okuyan bulur; bildirim için: hburaka@gmail.com
+
+## Lisans
+
+Kod açık, dinî metinlerin kaynakları uygulamada ayrıca belirtiliyor.
